@@ -1,82 +1,69 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<title>RunLoop深度剖析 - etund的小博客</title>
-	<meta name="author" content="etund">
+  <meta charset="utf-8">
+  <title>RunLoop深度剖析 - etund的小博客</title>
+  <meta name="author" content="etund">
 
-	
-	<meta name="description" content="RunLoop 前言 RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。
-网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的 &hellip;">
-	
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="description" content="RunLoop深度剖析 written RunLoop 前言 RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。 &hellip;">
+  
 
-	<link href="/atom.xml" rel="alternate" title="etund的小博客" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://etund.github.io/blog/2015/08/17/runloopshen-du-pou-xi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="etund的小博客" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+
 </head>
 
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
 
-<body>
-	<header id="header" class="inner"><h1><a href="/">etund的小博客</a></h1>
-<nav id="main-nav"><ul class="main">
-	<li><a href="/">Blog</a></li>
-	<li><a href="/blog/archives">Archives</a></li>
-</ul>
-</nav>
-<nav id="mobile-nav">
-	<div class="alignleft menu">
-		<a class="button">Menu</a>
-		<div class="container"><ul class="main">
-	<li><a href="/">Blog</a></li>
-	<li><a href="/blog/archives">Archives</a></li>
-</ul>
-</div>
-	</div>
-	<div class="alignright search">
-		<a class="button"></a>
-		<div class="container">
-			<form action="https://www.baidu.com" method="get">
-				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:etund.github.io">
-			</form>
-		</div>
-	</div>
-</nav>
-<nav id="sub-nav" class="alignright">
-	<div class="social">
-		
-		
-		
-		
-    
-		
-		
-		
-		
-		
-		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-		
-    
-	</div>
-	<form class="search" action="https://www.baidu.com" method="get">
-		<input class="alignright" type="text" name="q" results="0">
-		<input type="hidden" name="q" value="site:etund.github.io">
-	</form>
-</nav>
+    <article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>RunLoop深度剖析</h1>
+        <div class="meta">
+          written 
 
-</header>
-	
-		
-	
-	<div id="content" class="inner"><article class="post">
-	<h2 class="title">RunLoop深度剖析</h2>
-	<div class="entry-content"><h1>RunLoop</h1>
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-08-17T13:52:45+08:00" pubdate data-updated="true"></time>
+          
+
+
+        </div>
+        <h1>RunLoop</h1>
 
 <h2>前言</h2>
 
@@ -1057,54 +1044,60 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 
 
 
-</div>
 
 
-<div class="meta">
-	<div class="date">
+        <hr class="divider-short"/>
 
-
-
-
-Aug 17th, 2015</div>
-	<div class="tags">
-
-</div>
-	
-</div>
+        
+      </div>
+    </div>
+  </div>
 </article>
 
-	<div class="share">
-	<div class="addthis_toolbox addthis_default_style ">
-		
-		
-		<a class="addthis_button_tweet"></a>
-		
-		
-		
-	</div>
-	
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2015/08/17/pu-bu-liu/" title="Previous Post: 瀑布流">&laquo; Previous: 瀑布流</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
 </div>
 
 
-</div>
-	<footer id="footer" class="inner">Copyright &copy; 2015
-
-    etund
-
+    </div>
+  </div>
 </footer>
-	<script src="/javascripts/slash.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
 
-
-
-
-
-
-</body>
+    
+  </body>
 </html>

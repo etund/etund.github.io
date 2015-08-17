@@ -1,26 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[etund的小博客]]></title>
-  <link href="http://etund.github.io/atom.xml" rel="self"/>
-  <link href="http://etund.github.io/"/>
-  <updated>2015-08-17T18:37:06+08:00</updated>
-  <id>http://etund.github.io/</id>
-  <author>
-    <name><![CDATA[etund]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>All Posts - etund的小博客</title>
+  <meta name="author" content="etund">
 
   
-  <entry>
-    <title type="html"><![CDATA[RunLoop深度剖析]]></title>
-    <link href="http://etund.github.io/blog/2015/08/17/runloopshen-du-pou-xi/"/>
-    <updated>2015-08-17T13:52:45+08:00</updated>
-    <id>http://etund.github.io/blog/2015/08/17/runloopshen-du-pou-xi</id>
-    <content type="html"><![CDATA[<h1>RunLoop</h1>
+  <meta name="description" content="All Posts RunLoop深度剖析 RunLoop 前言 RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://etund.github.io/posts">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="etund的小博客" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+
+</head>
+
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
+
+    <div class="all-posts">
+  <div class="container">
+    <div class="row">
+      <div class="list-title col-md-offset-3 col-md-6">
+        <h4>All Posts</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-list">
+    <div class="container">
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/17/runloopshen-du-pou-xi/">RunLoop深度剖析</a></h2>
+  
+  <p>
+    <h1>RunLoop</h1>
+
+
+
 
 <h2>前言</h2>
+
+
+
 
 <ul>
 <li><p>RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。</p></li>
@@ -29,7 +75,12 @@
 </ul>
 
 
+
+
 <h2>概念</h2>
+
+
+
 
 <ul>
 <li><p>简单来说RunLoop是线程的基本架构模式，架构模式，架构模式-重要的事情说三遍，然并卵，哈哈，具体怎么做呢，就是有事做事，没事睡觉，有事叫我，就这样，想看详细的自己看中文文档去，毕竟文档哪里已经写的好详细了，再板书就没意义了。</p></li>
@@ -38,6 +89,8 @@
 <li>NSRunLoop提供了面向对象的API，但这些API不是线程安全的。</li>
 <li>创建，苹果官方对CFRunLoopRef进行了开源，在这里<a><a href="http://opensource.apple.com/tarballs/CF/CF-855.17.tar.gz">http://opensource.apple.com/tarballs/CF/CF-855.17.tar.gz</a> </a>下载就好，苹果官方不提供向我们平时那样子的新建对象的方法来获取NSRunLoop实例，但是可以通过[NSRunLoop getCurrentLoop]来创建，接下来看看具体是怎么创建的把,Show code！</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -147,12 +200,19 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>上面是苹果开源的CFRunLoop中获取RunLoop的代码，简而言之就是，在调用这个方法要存进一个PThread(PThread提供了跨平台的管理多线程的API)，利用这个PThread作为全局字典中的key，并创建与之对应的RunLoop作为Value.RunLoop在我们获取的时候创建，不获取不创建，主线程的RunLoop在一开始就自动创建。<code>简而言之，线程与RunLoop一一对应</code></li>
 </ul>
 
 
+
+
 <h2>对外接口</h2>
+
+
+
 
 <ul>
 <li>在CoreFoundation里面关于RunLoop有5个类
@@ -168,10 +228,18 @@
 </ul>
 
 
+
+
 <p><code>其中CFRunLoopModeRef类没有对外暴露，只是通过CFRunLoopRef接口进行了封装</code>
 - 一个RunLoop包含若干个Mode,每个Mode又包含若干个source/Timer/Observer,如图。</p>
 
+
+
+
 <p><img src="image/1432798883604537.png" title="Title" alt="alt text" /></p>
+
+
+
 
 <ul>
 <li><p>每次调用RunLoop的主函数时，只能指定其中一个Mode作为CurrentMode(可以通过这个属性获取当前的Mode),只能退出Loop,在重新指定一个Mode进入。在这里需要清楚的是，系统默认注册了5个Mode</p>
@@ -232,6 +300,8 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -247,23 +317,37 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>你只能通过mode name来操作内部的mode,当你传入一个的mode name没有对应的mode.RunLoop会自动帮你创建对应的CFRunLoopModeRef。对于一个RunLoop来说，其内部的mode只能增加不能删除。</li>
 </ul>
 
 
+
+
 <h2>RunLoop的内部逻辑</h2>
+
+
+
 
 <ul>
 <li>RunLoop内部的逻辑大致如下</li>
 </ul>
 
 
+
+
 <p><img src="image/1432798974517485.png" title="Title" alt="alt text" /></p>
+
+
+
 
 <ul>
 <li>其内部代码整理如下</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -489,19 +573,31 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>可以看到，实际上 RunLoop就是这样一个函数，其内部是一个 do-while 循环。当你调用CFRunLoopRun()时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</li>
 </ul>
 
 
+
+
 <h2>底层实现</h2>
+
+
+
 
 <ul>
 <li>从上面代码可以看到，RunLoop 的核心是基于 mach port 的，其进入休眠时调用的函数是mach_msg()。为了解释这个逻辑，下面稍微介绍一下 OSX/iOS 的系统架构</li>
 </ul>
 
 
+
+
 <p><img src="image/1432799001829463.png" alt="" /></p>
+
+
+
 
 <ul>
 <li>苹果官方将整个系统大致划分为上述4个层次：
@@ -620,9 +716,17 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h2>RunLoop 的实际应用举例</h2>
 
+
+
+
 <h6>AutoreleasePool</h6>
+
+
+
 
 <ul>
 <li><p>App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。</p></li>
@@ -632,7 +736,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>事件响应</h6>
+
+
+
 
 <ul>
 <li><p>苹果注册了一个Source1(基于machport的)用来接收系统事件，其回调函数为 __IOHIDEventSystemClientQueueCallback()。</p></li>
@@ -641,7 +750,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>手势识别</h6>
+
+
+
 
 <ul>
 <li><p>当上面的 _UIApplicationHandleEventQueue()识别了一个手势时，其首先会调用 Cancel 将当前的touchesBegin/Move/End系列回调打断。随后系统将对应的 UIGestureRecognizer 标记为待处理。</p></li>
@@ -653,7 +767,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>界面更新</h6>
+
+
+
 
 <ul>
 <li><p>当在操作 UI 时，比如改变了 Frame、更新了 UIView/CALayer 层次时，或者手动调用了UIView/CALayer的setNeedsLayout/setNeedsDisplay方法后，这个 UIView/CALayer就被标记为待处理，并被提交到一个全局的容器去。</p></li>
@@ -661,6 +780,8 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 <li><p>_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()。这个函数里会遍历所有待处理的UIView/CAlayer以执行实际的绘制和调整，并更新 UI 界面。</p></li>
 <li><p>这个函数内部的调用栈大概是这样的：</p></li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -688,7 +809,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h6>定时器</h6>
+
+
+
 
 <ul>
 <li><p>NSTimer 其实就是 CFRunLoopTimerRef，他们之间是 toll-free bridged 的。一个 NSTimer注册到RunLoop后，RunLoop会为其重复的时间点注册好事件。例如10:00,10:10,10:20这几个时间点。RunLoop为了节省资源，并不会在非常准确的时间点回调这个Timer。Timer 有个属性叫做 Tolerance (宽容度)，标示了当时间点到后，容许有多少最大误差。</p></li>
@@ -698,7 +824,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>PerformSelecter(利用RunLoop常驻线程)</h6>
+
+
+
 
 <ul>
 <li><p>当调用 NSObject的performSelecter:afterDelay:后，实际上其内部会创建一个 Timer 并添加到当前线程的RunLoop中。所以如果当前线程没有 RunLoop，则这个方法会失效。</p></li>
@@ -711,11 +842,18 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>关于网络请求</h6>
+
+
+
 
 <ul>
 <li>iOS 中，关于网络请求的接口自下至上有如下几层:</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -727,6 +865,8 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span><span class='line'><span class="bp">NSURLConnection</span> <span class="o">-&gt;</span><span class="n">AFNetworking</span>
 </span><span class='line'><span class="bp">NSURLSession</span>    <span class="o">-&gt;</span><span class="n">AFNetworking2</span><span class="p">,</span> <span class="n">Alamofire</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
 
 
 <ul>
@@ -754,11 +894,18 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>AFNetworking</h6>
+
+
+
 
 <ul>
 <li>AFURLConnectionOperation这个类是基于NSURLConnection构建的，其希望能在后台线程接收Delegate回调。为此AFNetworking独创建了一个线程，并在这个线程中启动了一个 RunLoop：</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -800,9 +947,13 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li><code>RunLoop 启动前内部必须要有至少一个item</code>，所以 AFNetworking在[runLooprun]之前先创建了一个新的NSMachPort 添加进去了。通常情况下，调用者需要持有这个NSMachPort(mach_port) 并在外部线程通过这个port发送消息到loop内；但此处添加 port 只是为了让RunLoop不至于退出，并没有用于实际的发送消息</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -828,9 +979,13 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>注意<code>RunLoop 启动前内部必须要有至少一个item</code>，虽然Obsever也是item的一种，但是只会等待Timer和Source ，Timer是因为有回调，Source是会接收事件，所以当RunLoop里面有Timer或者Source的时候，RunLoop会等待里面的item(除Obsever以外)<code>主动</code>给他发消息，然后Oberver<code>被动</code>的接收RunLoop发送过来的消息，亦即是说，能主动给RunLoop发消息的item会让RunLoop跑起来并且不退出。</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -846,12 +1001,19 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>当需要这个后台线程执行任务时，AFNetworking 通过调用[NSObject performSelector:onThread:..] 将这个任务扔到了后台线程的 RunLoop 中。</li>
 </ul>
 
 
+
+
 <h6>AsyncDisplayKit</h6>
+
+
+
 
 <ul>
 <li><p>AsyncDisplayKit是Facebook推出的用于保持界面流畅性的框架，其原理大致如下：</p>
@@ -869,11 +1031,18 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h6>常驻线程</h6>
+
+
+
 
 <ul>
 <li>有这么一个需求，我们要在子线程中没接收一个事件就调用一次方法。但是子线程在完成任务后就销毁，全局变量强引用？试试</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -919,7 +1088,12 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p><code>结果不能执行，这里要清楚线程的5个状态，新建，就绪，运行，阻塞，死亡。意思就是就算你是强引用一个子线程，但是他执行完任务就已经处于死亡状态了，只是他还存储在内存，</code>那么现在分析一下。</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -930,9 +1104,13 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <ul>
 <li>我们可以在线程初始化的时候执行的方法中给他创建一个运行时RunLoop,这是他就可以不断接收source，也就是这样</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -946,13 +1124,23 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p><code>注意：上面第一行代码必须加上，因为一个RunLoop里面必须有至少一个item(Obsever除外)</code></p>
 
+
+
+
 <h6>GCD定时器</h6>
+
+
+
 
 <ul>
 <li>有这么一个需求，需要这么一个定时器，误差几乎为0的定时器，但是无论是NSTimer还是CGDisplayLink都会有误差，而且误差都比较大，这是我们可以用GCD来实现定时器，实际上，上面已经说了，RunLoop底层也是调用GCD的source来实现NSTimer的，只是NSTimer还受mode的影响，下面来看看怎么用GCD实现</li>
 </ul>
+
+
 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -999,15 +1187,45 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 
 
 
-]]></content>
-  </entry>
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[瀑布流]]></title>
-    <link href="http://etund.github.io/blog/2015/08/17/pu-bu-liu/"/>
-    <updated>2015-08-17T13:16:06+08:00</updated>
-    <id>http://etund.github.io/blog/2015/08/17/pu-bu-liu</id>
-    <content type="html"><![CDATA[<h3>瀑布流实现</h3>
+
+
+
+<time datetime="2015-08-17T13:52:45+08:00" pubdate data-updated="true"></time>
+    
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/17/pu-bu-liu/">瀑布流</a></h2>
+  
+  <p>
+    <h3>瀑布流实现</h3>
+
+
+
 
 <ul>
 <li>UICollectionView</li>
@@ -1031,10 +1249,75 @@ CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
 </ul>
 
 
+
+
 <h3>Method Swizzing(iOS黑魔法)</h3>
 
-<p><img src="http://etund.github.io/images/1119216.gif" alt="" /></p>
-]]></content>
-  </entry>
+
+
+
+<p><img src="/images/1119216.gif" alt="" /></p>
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
   
-</feed>
+
+
+
+<time datetime="2015-08-17T13:16:06+08:00" pubdate data-updated="true"></time>
+    
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
+</div>
+
+
+    </div>
+  </div>
+</footer>
+
+    
+  </body>
+</html>
