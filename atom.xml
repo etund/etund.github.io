@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[etund的小博客]]></title>
   <link href="http://etund.github.io/atom.xml" rel="self"/>
   <link href="http://etund.github.io/"/>
-  <updated>2015-08-17T13:33:07+08:00</updated>
+  <updated>2015-08-17T13:46:20+08:00</updated>
   <id>http://etund.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[etund]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -45,41 +45,6 @@
 <h3>Method Swizzing(iOS黑魔法)</h3>
 
 <p><img src="http://etund.github.io/images/1119216.gif" alt="" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[瀑布流]]></title>
-    <link href="http://etund.github.io/blog/2015/08/17/%E7%80%91%E5%B8%83%E6%B5%81/"/>
-    <updated>2015-08-17T00:00:00+08:00</updated>
-    <id>http://etund.github.io/blog/2015/08/17/瀑布流</id>
-    <content type="html"><![CDATA[<h3>瀑布流实现</h3>
-
-<ul>
-<li>UICollectionView</li>
-<li><p>实现</p>
-
-<ul>
-<li>下一栏的第一个控件在排在上一栏的最矮的控件下面。</li>
-<li><h2>网络结合</h2></li>
-</ul>
-</li>
-<li><p>接口实现</p>
-
-<ul>
-<li>模仿tableView</li>
-</ul>
-</li>
-<li><p>用MJRefresh来与UICollectionView来实现瀑布流。</p></li>
-<li>快速遍历</li>
-<li>崩溃报告</li>
-<li>如果想要使用点语法，必须在interface里面声明一下。</li>
-</ul>
-
-
-<h3>Method Swizzing(iOS黑魔法)</h3>
-
-<p><img src="http://etund.github.io/images/MM_0.jpg" alt="" /></p>
 ]]></content>
   </entry>
   
