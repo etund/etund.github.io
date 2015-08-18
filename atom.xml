@@ -4,7 +4,7 @@
   <title><![CDATA[etund的小博客]]></title>
   <link href="http://etund.github.io/atom.xml" rel="self"/>
   <link href="http://etund.github.io/"/>
-  <updated>2015-08-18T18:01:10+08:00</updated>
+  <updated>2015-08-18T18:22:45+08:00</updated>
   <id>http://etund.github.io/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -27,6 +27,9 @@
 <li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，原文：<a href="http://www.cocoachina.com/ios/20150601/11970.html">http://www.cocoachina.com/ios/20150601/11970.html</a></p></li>
 <li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>概念</h2>
