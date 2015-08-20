@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: ttt | etund喔喔喔]]></title>
-  <link href="http://etund.github.io/tags/ttt/atom.xml" rel="self"/>
-  <link href="http://etund.github.io/"/>
-  <updated>2015-08-20T11:24:03+08:00</updated>
-  <id>http://etund.github.io/</id>
+  <link href="http://etund.github.com/tags/ttt/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-08-20T20:24:51+08:00</updated>
+  <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
     <email><![CDATA[a925813235z@qq.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[RunLoop深度剖析]]></title>
-    <link href="http://etund.github.io/blog/2015/08/17/runloopshen-du-pou-xi/"/>
+    <link href="http://etund.github.com/blog/2015/08/17/runloopshen-du-pou-xi/"/>
     <updated>2015-08-17T13:52:45+08:00</updated>
-    <id>http://etund.github.io/blog/2015/08/17/runloopshen-du-pou-xi</id>
+    <id>http://etund.github.com/blog/2015/08/17/runloopshen-du-pou-xi</id>
     <content type="html"><![CDATA[<h1>RunLoop</h1>
 
 <h2>前言</h2>
@@ -730,9 +730,9 @@ NSURLSession    -&gt;AFNetworking2, Alamofire
   
   <entry>
     <title type="html"><![CDATA[瀑布流]]></title>
-    <link href="http://etund.github.io/blog/2015/08/17/pu-bu-liu/"/>
+    <link href="http://etund.github.com/blog/2015/08/17/pu-bu-liu/"/>
     <updated>2015-08-17T13:16:06+08:00</updated>
-    <id>http://etund.github.io/blog/2015/08/17/pu-bu-liu</id>
+    <id>http://etund.github.com/blog/2015/08/17/pu-bu-liu</id>
     <content type="html"><![CDATA[<h3>瀑布流实现</h3>
 
 <ul>

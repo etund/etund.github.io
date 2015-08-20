@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://etund.github.io/sitemap.xml 
+Sitemap: http://etund.github.com/sitemap.xml 
