@@ -5,16 +5,14 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>瀑布流 - etund喔喔喔</title>
+	<title>多线程(一) - etund喔喔喔</title>
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="瀑布流 瀑布流实现 UICollectionView
-实现 下一栏的第一个控件在排在上一栏的最矮的控件下面。
-网络结合 接口实现 模仿tableView 用MJRefresh来与UICollectionView来实现瀑布流。
-快速遍历
-崩溃报告
-如果想要使用点语法， &hellip;">
+	<meta name="description" content="多线程(一) 简单回顾 iOS中多线程实现有几种方案？ 首先搞清楚什么是线程，什么是多线程。
+Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。
+开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。
+基本实现 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +22,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://etund.github.com/blog/2015/08/17/pu-bu-liu/">
+	<link rel="canonical" href="http://etund.github.com/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -298,34 +296,89 @@
 			
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">瀑布流</h1>
-	<div class="entry-content" itemprop="articleBody"><h3>瀑布流实现</h3>
+	<h1 class="title" itemprop="name">多线程(一)</h1>
+	<div class="entry-content" itemprop="articleBody"><h4>简单回顾</h4>
 
 <ul>
-<li>UICollectionView</li>
-<li><p>实现</p>
+<li>iOS中多线程实现有几种方案？
 
 <ul>
-<li>下一栏的第一个控件在排在上一栏的最矮的控件下面。</li>
-<li><h2>网络结合</h2></li>
+<li>首先搞清楚什么是线程，什么是多线程。</li>
+<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
+<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
+<li>基本实现
+
+<ul>
+<li>pthead，纯C，手动管理生命周期</li>
+<li>NSThread，OC，面向对象。手动管理内存</li>
+<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
+<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
 </ul>
 </li>
-<li><p>接口实现</p>
-
-<ul>
-<li>模仿tableView</li>
 </ul>
 </li>
-<li><p>用MJRefresh来与UICollectionView来实现瀑布流。</p></li>
-<li>快速遍历</li>
-<li>崩溃报告</li>
-<li>如果想要使用点语法，必须在interface里面声明一下。</li>
 </ul>
 
 
-<h3>Method Swizzing(iOS黑魔法)</h3>
+<!-- more -->
 
-<p><img src="/images/1119216.gif" alt="" /></p>
+
+<ul>
+<li><p>线程间怎么通信？</p>
+
+<ul>
+<li>perfromSelectior:onThead:withObjecti:waitUntilDone:</li>
+<li>NSMachPort(在RunLoop里面的source0和source1里面)</li>
+</ul>
+</li>
+<li><p>cocoa常见的多线程实现</p>
+
+<ul>
+<li>只有在主线程刷新访问UI</li>
+<li>如果要保证属性的线程安全（atomic）</li>
+<li>如果一部操作要保证线程安全等问题，尽量使用GCD</li>
+<li>如果想要定时器精确，用GCD定时器</li>
+</ul>
+</li>
+<li><p>GCD内部实现</p>
+
+<ul>
+<li>iOS和OSX的黑心是XNU内核，GCD是基于XNU内核实现的</li>
+<li>GCD的API全部在libdiPatch库中</li>
+<li>GCD的底层实现主要有DispatchQueue和DispatchSource
+
+<ul>
+<li>DispatchQueue:管理block(操作)</li>
+<li>DispatchSource:处理事件(MACH端口发送，MACH端口接收，监测与进程的事件的10种事件)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>NSOperation相对于GCD的优点</p>
+
+<ul>
+<li>面向对象</li>
+<li>封装性好</li>
+<li>提供便利的方法</li>
+<li>支持KVO,可以监测operation是否正在执行(isExecuted),是否结束(isFinished)，是否取消(isCancled)</li>
+<li>GCD的执行速度比NSOperationQueue快</li>
+<li>选择
+
+<ul>
+<li>任务需要依赖或者要监听任务的执行情况，用NSOperationQueue</li>
+</ul>
+</li>
+<li>在使用GCD的时候要防止循环引用
+
+<ul>
+<li>ARC:_weak_unsafe_unretained</li>
+<li>MRC:_block</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
 </div>
 
 </article>
@@ -379,7 +432,7 @@ var jiathis_config={
   <section>
     <h1>Comments</h1>
     <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title="瀑布流"></div>
+<div class="ds-thread" data-title="多线程(一)"></div>
 <script type="text/javascript">
   var duoshuoQuery = {short_name:"etund"};
   (function() {
