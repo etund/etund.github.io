@@ -4,7 +4,7 @@
   <title><![CDATA[etund喔喔喔]]></title>
   <link href="http://etund.github.com/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-21T23:07:21+08:00</updated>
+  <updated>2015-08-21T23:13:39+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -14,9 +14,9 @@
 
   
   <entry>
-    <title type="html"><![CDATA[原谅我这一生不羁放纵爱自由]]></title>
+    <title type="html"><![CDATA[多线程(一)]]></title>
     <link href="http://etund.github.com/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/"/>
-    <updated>2015-08-21T22:44:52+08:00</updated>
+    <updated>2015-08-21T22:13:01+08:00</updated>
     <id>http://etund.github.com/blog/2015/08/21/yuan-liang-wo-zhe-[?]-sheng-bu-ji-fang-zong-ai-zi-you</id>
     <content type="html"><![CDATA[
 ]]></content>
@@ -24,99 +24,9 @@
   
   <entry>
     <title type="html"><![CDATA[多线程(一)]]></title>
-    <link href="http://etund.github.com/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/"/>
+    <link href="http://etund.github.com/blog/2015/08/21/runloopshen-du-pou-xi/"/>
     <updated>2015-08-21T22:13:01+08:00</updated>
-    <id>http://etund.github.com/blog/2015/08/21/duo-xian-cheng-[?]</id>
-    <content type="html"><![CDATA[<h4>简单回顾</h4>
-
-<ul>
-<li>iOS中多线程实现有几种方案？
-
-<ul>
-<li>首先搞清楚什么是线程，什么是多线程。</li>
-<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
-<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
-<li>基本实现
-
-<ul>
-<li>pthead，纯C，手动管理生命周期</li>
-<li>NSThread，OC，面向对象。手动管理内存</li>
-<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
-<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-<!-- more -->
-
-
-<ul>
-<li><p>线程间怎么通信？</p>
-
-<ul>
-<li>perfromSelectior:onThead:withObjecti:waitUntilDone:</li>
-<li>NSMachPort(在RunLoop里面的source0和source1里面)</li>
-</ul>
-</li>
-<li><p>cocoa常见的多线程实现</p>
-
-<ul>
-<li>只有在主线程刷新访问UI</li>
-<li>如果要保证属性的线程安全（atomic）</li>
-<li>如果一部操作要保证线程安全等问题，尽量使用GCD</li>
-<li>如果想要定时器精确，用GCD定时器</li>
-</ul>
-</li>
-<li><p>GCD内部实现</p>
-
-<ul>
-<li>iOS和OSX的黑心是XNU内核，GCD是基于XNU内核实现的</li>
-<li>GCD的API全部在libdiPatch库中</li>
-<li>GCD的底层实现主要有DispatchQueue和DispatchSource
-
-<ul>
-<li>DispatchQueue:管理block(操作)</li>
-<li>DispatchSource:处理事件(MACH端口发送，MACH端口接收，监测与进程的事件的10种事件)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>NSOperation相对于GCD的优点</p>
-
-<ul>
-<li>面向对象</li>
-<li>封装性好</li>
-<li>提供便利的方法</li>
-<li>支持KVO,可以监测operation是否正在执行(isExecuted),是否结束(isFinished)，是否取消(isCancled)</li>
-<li>GCD的执行速度比NSOperationQueue快</li>
-<li>选择
-
-<ul>
-<li>任务需要依赖或者要监听任务的执行情况，用NSOperationQueue</li>
-</ul>
-</li>
-<li>在使用GCD的时候要防止循环引用
-
-<ul>
-<li>ARC:_weak_unsafe_unretained</li>
-<li>MRC:_block</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Runloopshen Du Pou Xi]]></title>
-    <link href="http://etund.github.com/blog/2015/08/17/runloopshen-du-pou-xi/"/>
-    <updated>2015-08-17T00:00:00+08:00</updated>
-    <id>http://etund.github.com/blog/2015/08/17/runloopshen-du-pou-xi</id>
+    <id>http://etund.github.com/blog/2015/08/21/runloopshen-du-pou-xi</id>
     <content type="html"><![CDATA[<h1>RunLoop</h1>
 
 <h2>前言</h2>
@@ -126,6 +36,9 @@
 <li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，原文：<a href="http://www.cocoachina.com/ios/20150601/11970.html">http://www.cocoachina.com/ios/20150601/11970.html</a></p></li>
 <li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>概念</h2>
@@ -1090,6 +1003,96 @@ __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
 </span><span class='line'><span class="c1">//    启动定时器</span>
 </span><span class='line'>    <span class="n">dispatch_resume</span><span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">timer</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[多线程(一)]]></title>
+    <link href="http://etund.github.com/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/"/>
+    <updated>2015-08-21T22:13:01+08:00</updated>
+    <id>http://etund.github.com/blog/2015/08/21/duo-xian-cheng-[?]</id>
+    <content type="html"><![CDATA[<h4>简单回顾</h4>
+
+<ul>
+<li>iOS中多线程实现有几种方案？
+
+<ul>
+<li>首先搞清楚什么是线程，什么是多线程。</li>
+<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
+<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
+<li>基本实现
+
+<ul>
+<li>pthead，纯C，手动管理生命周期</li>
+<li>NSThread，OC，面向对象。手动管理内存</li>
+<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
+<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li><p>线程间怎么通信？</p>
+
+<ul>
+<li>perfromSelectior:onThead:withObjecti:waitUntilDone:</li>
+<li>NSMachPort(在RunLoop里面的source0和source1里面)</li>
+</ul>
+</li>
+<li><p>cocoa常见的多线程实现</p>
+
+<ul>
+<li>只有在主线程刷新访问UI</li>
+<li>如果要保证属性的线程安全（atomic）</li>
+<li>如果一部操作要保证线程安全等问题，尽量使用GCD</li>
+<li>如果想要定时器精确，用GCD定时器</li>
+</ul>
+</li>
+<li><p>GCD内部实现</p>
+
+<ul>
+<li>iOS和OSX的黑心是XNU内核，GCD是基于XNU内核实现的</li>
+<li>GCD的API全部在libdiPatch库中</li>
+<li>GCD的底层实现主要有DispatchQueue和DispatchSource
+
+<ul>
+<li>DispatchQueue:管理block(操作)</li>
+<li>DispatchSource:处理事件(MACH端口发送，MACH端口接收，监测与进程的事件的10种事件)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>NSOperation相对于GCD的优点</p>
+
+<ul>
+<li>面向对象</li>
+<li>封装性好</li>
+<li>提供便利的方法</li>
+<li>支持KVO,可以监测operation是否正在执行(isExecuted),是否结束(isFinished)，是否取消(isCancled)</li>
+<li>GCD的执行速度比NSOperationQueue快</li>
+<li>选择
+
+<ul>
+<li>任务需要依赖或者要监听任务的执行情况，用NSOperationQueue</li>
+</ul>
+</li>
+<li>在使用GCD的时候要防止循环引用
+
+<ul>
+<li>ARC:_weak_unsafe_unretained</li>
+<li>MRC:_block</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
 ]]></content>
   </entry>
