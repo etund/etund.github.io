@@ -5,11 +5,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Blog Archives - etund喔喔喔</title>
+	<title>百思不得姐-项目总结(五) - etund喔喔喔</title>
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="2015 Aug 22 百思不得姐-项目总结(五) Aug 22 百思不得姐-项目总结(四) Aug 22 百思不得姐-项目总结(三) Aug 22 百思不得姐-项目总结(二) Aug 22 百思不得姐-项目总结(一) Aug 22 QQ音乐总结 Aug 22 浅拷贝与深拷贝 Aug 21 &hellip;">
+	<meta name="description" content="百思不得姐-项目总结(五) 功能模块实现(部分) 自定义UITextView 添加内容输入框。 内嵌
+自定义UITextView 占位字符 监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。 细节处理与功能扩展 如何动态监测占位字符的改变。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://etund.github.com/blog/archives/">
+	<link rel="canonical" href="http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -292,164 +293,187 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><div itemscope itemtype="http://schema.org/Blog">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">百思不得姐-项目总结(五)</h1>
+	<div class="entry-content" itemprop="articleBody"><h3>功能模块实现(部分)</h3>
 
-	
+<h5>自定义UITextView</h5>
+
+<ul>
+<li>添加内容输入框。
+
+<ul>
+<li>内嵌</li>
+<li>自定义UITextView
+
+<ul>
+<li>占位字符</li>
+</ul>
+</li>
+<li>监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。</li>
+</ul>
+</li>
+</ul>
 
 
-	
-	
-	<section class="archives"><h1 class="year">2015</h1>
+<!-- more -->
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:50:39+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
 
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">百思不得姐-项目总结(五)</a></h1>
+<ul>
+<li><p>细节处理与功能扩展</p>
+
+<ul>
+<li>如何动态监测占位字符的改变。</li>
+<li>如何动态监测文字大小与颜色。
+
+<ul>
+<li><code>setNeedsLayout</code>与<code>setNeedsDisplay</code>的区别
+
+<ul>
+<li><code>setNeedsLayout</code>：会在恰当的时刻调用layoutSubviews方法</li>
+<li><code>setNeedsDisplay</code>：会在恰当的时刻自动调用drawRect:方法</li>
+<li><code>但是上面两个方法在一些操作上有些功能重复</code></li>
+<li>想使用KVC来修改该对象的值，就要用该对象来调用KVC
+<code>layoutIfNeeded</code>强制布局</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果一进来UITextView就有值呢？(包括有属性的文字与无属性的文字)</li>
+</ul>
+</li>
+<li><p><code>监听UITextView内容的改变用通知，监听UITextField的改变用代理。</code></p></li>
+<li>如何在键盘上添加视图
+
+<ul>
+<li>方法一
+
+<ul>
+<li>添加键盘监听</li>
+<li>将view添加到键盘视图上</li>
+<li>平移视图</li>
+<li>键盘下降视图脱落，添加到主视图上。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h5>标签编辑界面</h5>
+
+<ul>
+<li>思路
+
+<ul>
+<li>先添加一个UITextField</li>
+</ul>
+</li>
+<li>用UITextField还是UITextView?
+
+<ul>
+<li>由于标签比较短，下面还要添加一个按钮，前面要添加UIButton.</li>
+<li>那么我们的TextField需要什么功能？
+
+<ul>
+<li>占位字符，光标。</li>
+<li>实时更新UITextField的宽度。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>如何触发确认事件</p>
+
+<ul>
+<li>包括字符:逗号,空格,回车以及点击下面的标记按钮</li>
+<li>接收键盘return键，delete键</li>
+</ul>
+</li>
+<li><p>由于重写UINavigationViewController后不能使用右滑来返回上一层，这是可以讲</p></li>
+<li><p>设置一个代理为空。</p></li>
+<li><p>数据回显，也就是界面传值:无非四种:block 代理，通知，单例,意思是如何让一个界面的数据在上一个界面显示。</p>
+
+<ul>
+<li>这里用block</li>
+</ul>
+</li>
+<li>如何解决界面会跳的时候键盘覆盖原来的控件。
+
+<ul>
+<li>这是由于添加键盘监听与设置第一响应者和注销第一响应者的顺序不对。</li>
+<li>在注册键盘弹出的时候要注意添加监听和去除监听前后，也就是说，在成为添加键盘监听之后注册第一响应者，在去除键盘监听之前注销第一响应者。</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
 </article>
 
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:47:07+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">百思不得姐-项目总结(四)</a></h1>
-</article>
-
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:26:47+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">百思不得姐-项目总结(三)</a></h1>
-</article>
-
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:08:55+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">百思不得姐-项目总结(二)</a></h1>
-</article>
-
 	
+    <style>
+    .flash-video{display:none;}
+</style>
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a class="jiathis_button_t163">网易微博</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_renren">人人网</a>
+<a class="jiathis_button_douban">豆瓣</a>
 
+<a href="http://www.jiathis.com/share?uid=1574434" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+    data_track_clickback:true,
+    sm:"t163,tsina,tqq,renren,douban",
+    summary:"",
+    hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js?uid=1574434" charset="utf-8"></script>
+<!-- JiaThis Button END -->
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T18:54:55+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
+<!-- <br /> -->
+<!-- UY BEGIN -->
+<!-- <div id="uyan_frame"></div>
+<script type="text/javascript" id="UYScript" src="http://v1.uyan.cc/js/iframe.js?UYUserId=89581" async=""></script>
+ --><!-- UY END -->
+  	
+	<a class="addthis_counter addthis_pill_style"></a>
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">百思不得姐-项目总结(一)</a></h1>
-</article>
-
-	
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T14:40:29+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/qqyin-le-zong-jie/">QQ音乐总结</a></h1>
-</article>
-
-	
 
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T14:15:33+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">浅拷贝与深拷贝</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/runloopshen-du-pou-xi/">RunLoop深度剖析</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/">多线程(一)</a></h1>
-</article>
-
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="百思不得姐-项目总结(五)"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"etund"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
   </section>
-</div></div>
+</div>
 			</div>
 			<footer id="footer" class="inner">Copyright &copy; 2015
 

@@ -9,8 +9,8 @@
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="| Comments QQ音乐总结 前言 对于项目，有些细节以及小技巧是网上很难表达的，也很难找到，这需要经验的积累，如果有某些有经验的开发人员教你一些小技巧，经验心得，一定要总结，这样就可以少走很多弯路，所以很感谢小码哥的老师。
-多媒体有别于我们一般的接触的项目，一切都值得记录。 阅读全文 &hellip;">
+	<meta name="description" content="| Comments 百思不得姐-项目总结(五) 功能模块实现(部分) 自定义UITextView 添加内容输入框。 内嵌
+自定义UITextView 占位字符 监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。 阅读全文 | Comments &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -295,6 +295,256 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T19:50:39+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/" itemprop="url">百思不得姐-项目总结(五)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>功能模块实现(部分)</h3>
+
+<h5>自定义UITextView</h5>
+
+<ul>
+<li>添加内容输入框。
+
+<ul>
+<li>内嵌</li>
+<li>自定义UITextView
+
+<ul>
+<li>占位字符</li>
+</ul>
+</li>
+<li>监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T19:47:07+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/" itemprop="url">百思不得姐-项目总结(四)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>哪些网上找不到的经验(二)</h3>
+
+<ul>
+<li>将约束对象翻转
+
+<ul>
+<li>这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。</li>
+</ul>
+</li>
+<li>placeholderlabel是懒加载的。
+
+<pre><code>  - 所以利用KVC设置placeholderlabel的颜色属性的时候要placeholderlabel是否为空。
+</code></pre></li>
+<li>如果我们的控件从xid加载
+
+<ul>
+<li>可以在layoutsubview方法里面设置控件尺寸</li>
+<li>排布子控件不管是从xib加载还是代码加载都不受控制，可以在layoutsubview里面设置</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T19:26:47+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/" itemprop="url">百思不得姐-项目总结(三)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>哪些网上找不到的经验(一)</h3>
+
+<ul>
+<li>[UIColor colorWithPatternImage:]设置颜色跟图片一致</li>
+<li>属性后面有Appearance宏，都可以通过Appearance统一设置，例如：UITabarItem</li>
+<li>在分类中声明Property，只会声明方法声明，不会生成方法的实现和下划线属性。</li>
+<li>用imageView的initWithImage图片尺寸会与imageView一样</li>
+<li>如果navbarItem里面是文件，那么item接受事件，如果是Button，那么改button接收事件</li>
+<li>按住Option加回车，UILabel可以换行</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T19:08:55+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/" itemprop="url">百思不得姐-项目总结(二)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>小技巧(二)</h3>
+
+<h4>双击菜单栏回到顶部？点击屏幕顶部回到最上面？</h4>
+
+<ul>
+<li><p>在整个应用启动的时候在应用顶部添加一个window用于点击，然后再监听这个window的点击事件。</p></li>
+<li><p>自己自顶一个而一个类，继承window或者NSObject都行，然后定义一个window_成员变量。</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">window_</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ETScreenW</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">windowLevel</span> <span class="o">=</span> <span class="n">UIWindowLevelAlert</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">window_</span> <span class="nl">addGestureRecognizer</span><span class="p">:[[</span><span class="bp">UITapGestureRecognizer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">windowClick</span><span class="p">)]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+		
+		<a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T18:54:55+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/" itemprop="url">百思不得姐-项目总结(一)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>前言</h3>
+
+<ul>
+<li>项目不同一般的小例子，不仅仅是知识的回顾，还是工程的封装，编程的思想，经验的总结，更多小技巧就是在项目里面摸索出来的，当然有前辈带你最好了，所以在这里感谢<a href="http://www.520it.com/index.htm">小码哥</a>的李明杰老师讲的这个小项目，我再这个项目中受益匪浅，趁现在还没忘记赶紧记下来，成为我自己的东西。</li>
+<li>这个项目是一个段子类的项目，百思不得姐，一个段子软件，具体情况自己下载来玩吧。</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">

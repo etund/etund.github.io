@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/</loc>
+    <lastmod>2015-08-22T19:50:39+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/</loc>
+    <lastmod>2015-08-22T19:47:07+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/</loc>
+    <lastmod>2015-08-22T19:26:47+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/</loc>
+    <lastmod>2015-08-22T19:08:55+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/</loc>
+    <lastmod>2015-08-22T18:54:55+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://etund.github.com/blog/2015/08/22/qqyin-le-zong-jie/</loc>
     <lastmod>2015-08-22T14:40:29+08:00</lastmod>
   </url>
@@ -52,6 +72,9 @@
   </url>
   <url>
     <loc>http://etund.github.com/tags/xiang-mu/</loc>
+  </url>
+  <url>
+    <loc>http://etund.github.com/tags/bai-si-bu-de-jie-,xiang-mu-zong-jie-,jing-yan/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/blog/intruduction/index.html</loc>

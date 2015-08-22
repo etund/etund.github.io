@@ -5,11 +5,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Blog Archives - etund喔喔喔</title>
+	<title>百思不得姐-项目总结(四) - etund喔喔喔</title>
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="2015 Aug 22 百思不得姐-项目总结(五) Aug 22 百思不得姐-项目总结(四) Aug 22 百思不得姐-项目总结(三) Aug 22 百思不得姐-项目总结(二) Aug 22 百思不得姐-项目总结(一) Aug 22 QQ音乐总结 Aug 22 浅拷贝与深拷贝 Aug 21 &hellip;">
+	<meta name="description" content="百思不得姐-项目总结(四) 哪些网上找不到的经验(二) 将约束对象翻转 这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。 placeholderlabel是懒加载的。 - &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://etund.github.com/blog/archives/">
+	<link rel="canonical" href="http://etund.github.com/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -292,164 +292,230 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><div itemscope itemtype="http://schema.org/Blog">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">百思不得姐-项目总结(四)</h1>
+	<div class="entry-content" itemprop="articleBody"><h3>哪些网上找不到的经验(二)</h3>
 
-	
+<ul>
+<li>将约束对象翻转
+
+<ul>
+<li>这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。</li>
+</ul>
+</li>
+<li>placeholderlabel是懒加载的。
+
+<pre><code>  - 所以利用KVC设置placeholderlabel的颜色属性的时候要placeholderlabel是否为空。
+</code></pre></li>
+<li>如果我们的控件从xid加载
+
+<ul>
+<li>可以在layoutsubview方法里面设置控件尺寸</li>
+<li>排布子控件不管是从xib加载还是代码加载都不受控制，可以在layoutsubview里面设置</li>
+</ul>
+</li>
+</ul>
 
 
-	
-	
-	<section class="archives"><h1 class="year">2015</h1>
+<!-- more -->
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:50:39+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
 
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">百思不得姐-项目总结(五)</a></h1>
+<ul>
+<li>监听键盘属性变化的时候可以把键盘先退出在重新加载
+
+<ul>
+<li>对于监听的添加，以及主动设置第一响应者和注销第一响应者的时候要注意，在view出现的时候添加监听，在消失的时候去除监听，在在监听的去除和添加之间注册和注销第一响应者。也就是在监听添加之后注册第一响应者，在监听去除之前注销第一响应者。</li>
+</ul>
+</li>
+<li>如何在控制器的TabBar中添加按钮
+
+<ul>
+<li>可以用KVC替换TabBar然后在TabBar里面处理控件尺寸</li>
+</ul>
+</li>
+<li>如何让图片与文字不受渲染
+
+<ul>
+<li>图片可以用[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]来设置</li>
+<li>文字属性可以在initialize方法里面设置，有Appearance宏的属性都可以统一设置</li>
+</ul>
+</li>
+<li>为什么在layoutSubviews里面调用dipatch_once会失败
+
+<ul>
+<li>由于static关键字</li>
+</ul>
+</li>
+<li>当同时多次点击添加按钮的时候会出现多次添加控制器
+
+<ul>
+<li>这是动画的造成的bug，(参考我的另外一篇博客，UINavigation日常)</li>
+</ul>
+</li>
+<li>返回数据照片会使cell的tableView变化
+
+<ul>
+<li>只要设置了placeholder图片返回的图片绝对不会变化</li>
+</ul>
+</li>
+<li>如何解决网络慢带来的问题
+
+<ul>
+<li>在每次点击的时候马上刷新数据</li>
+</ul>
+</li>
+<li>让用户不要一直发请求
+
+<ul>
+<li>在分类里面把数据存储起来，判断是否要发请求。</li>
+</ul>
+</li>
+<li>下拉刷新
+
+<ul>
+<li>由于刷新，所以每次刷新要去服务器取首页数据，把以前的数据清除掉。</li>
+<li>由于每次都要上拉/下拉刷新，所以不需要判断是否有数据</li>
+<li>由于每次都是要点击到其他页面才下拉刷新，所以原则上是不需要判断当前的传进去的参数与self的参数是否一致，但是以防万一数据传输过慢还是加上好。</li>
+<li>不用每次刷新右控件都去检查上拉刷新</li>
+<li>但是右边每次reloadData的时候都要检查是否已经加载完</li>
+</ul>
+</li>
+<li>如何让TextField的文字显示为白色。
+
+<ul>
+<li> 可以通过attributePlaceHolder来实现</li>
+<li> 可以通过kvc来实现</li>
+</ul>
+</li>
+<li>如何让tableView显示在窗口的中间。
+
+<ul>
+<li>可以设置contentInset</li>
+</ul>
+</li>
+<li>如何解决cell重用图片重叠的问题
+
+<ul>
+<li>原因不详：</li>
+<li>解决方法，在每次添加imageView的时候移除出父控件就好。</li>
+<li>每种数据样式都要把其他样式的图片给隐藏掉。</li>
+</ul>
+</li>
+<li>如何解决刷新的时候上拉与下拉同时进行？
+
+<ul>
+<li>可以保证下拉和下拉只有一个进行，在下拉之前停了上拉，在下拉之前停掉上拉。</li>
+</ul>
+</li>
+<li>如何快速设置已经有背景图片的按钮的大小
+
+<ul>
+<li>把button的大小设为背景图片的大小即可。</li>
+<li>button.currentImage</li>
+</ul>
+</li>
+<li>如何解决界面会跳的时候键盘覆盖原来的控件。
+
+<ul>
+<li>这是由于添加键盘监听与设置第一响应者和注销第一响应者的顺序不对。</li>
+<li>在注册键盘弹出的时候要注意添加监听和去除监听前后，也就是说，在成为添加键盘监听之后注册第一响应者，在去除键盘监听之前注销第一响应者。</li>
+</ul>
+</li>
+<li>建议用数组来代替if-else,表驱动法</li>
+<li>tabelView不分组的问题？tableView分组一定要设置grop样式吗？
+
+<ul>
+<li>实现tableView的代理方法viewForHeaderInSection，要向这个方法有效，必须实现heightForHeaderInSection或者设置tableView的样式为group。</li>
+</ul>
+</li>
+<li>如何不占内存的给项目添加圆角？
+
+<ul>
+<li>利用画图知识。</li>
+</ul>
+</li>
+<li>用pop框架做动画，在开始之前view会默认处于默认位置。</li>
+<li>换肤
+
+<ul>
+<li>设计模式
+
+<ul>
+<li>plist - 皮肤文件夹 - plist - 图片</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
 </article>
 
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:47:07+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">百思不得姐-项目总结(四)</a></h1>
-</article>
-
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:26:47+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">百思不得姐-项目总结(三)</a></h1>
-</article>
-
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T19:08:55+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">百思不得姐-项目总结(二)</a></h1>
-</article>
-
 	
+    <style>
+    .flash-video{display:none;}
+</style>
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a class="jiathis_button_t163">网易微博</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_renren">人人网</a>
+<a class="jiathis_button_douban">豆瓣</a>
 
+<a href="http://www.jiathis.com/share?uid=1574434" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+    data_track_clickback:true,
+    sm:"t163,tsina,tqq,renren,douban",
+    summary:"",
+    hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js?uid=1574434" charset="utf-8"></script>
+<!-- JiaThis Button END -->
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T18:54:55+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
+<!-- <br /> -->
+<!-- UY BEGIN -->
+<!-- <div id="uyan_frame"></div>
+<script type="text/javascript" id="UYScript" src="http://v1.uyan.cc/js/iframe.js?UYUserId=89581" async=""></script>
+ --><!-- UY END -->
+  	
+	<a class="addthis_counter addthis_pill_style"></a>
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">百思不得姐-项目总结(一)</a></h1>
-</article>
-
-	
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T14:40:29+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/qqyin-le-zong-jie/">QQ音乐总结</a></h1>
-</article>
-
-	
 
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-22T14:15:33+08:00" itemprop="datePublished">Aug 22</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">浅拷贝与深拷贝</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/runloopshen-du-pou-xi/">RunLoop深度剖析</a></h1>
-</article>
-
-	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2015-08-21T22:13:01+08:00" itemprop="datePublished">Aug 21</time></span>
-		<br>
-		<span class="tags">
-
-</span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/">多线程(一)</a></h1>
-</article>
-
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="百思不得姐-项目总结(四)"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"etund"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
   </section>
-</div></div>
+</div>
 			</div>
 			<footer id="footer" class="inner">Copyright &copy; 2015
 
