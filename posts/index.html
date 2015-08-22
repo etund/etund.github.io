@@ -9,7 +9,9 @@
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="All Posts 原谅我这一生不羁放纵爱自由 written RunLoop深度剖析 RunLoop 前言 RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式， &hellip;">
+	<meta name="description" content="All Posts 浅拷贝与深拷贝 深拷贝与浅拷贝 浅拷贝是指针拷贝，深拷贝是内容拷贝
+产生新对象的时深拷贝，不产生新对象的时浅拷贝
+浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -303,6 +305,78 @@
 
   <div class="article-list">
     <div class="container">
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">浅拷贝与深拷贝</a></h2>
+  
+  <p>
+    <h4>深拷贝与浅拷贝</h4>
+
+
+
+
+<ul>
+<li>浅拷贝是指针拷贝，深拷贝是内容拷贝</li>
+<li>产生新对象的时深拷贝，不产生新对象的时浅拷贝</li>
+<li><p>浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。</p></li>
+<li><p>NString与copy(不产生新对象，浅拷贝，指针拷贝)</p></li>
+</ul>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@&quot;00000000000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="k">copy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:42:24.992 Text[1143:32063] 0x10128c7d0---------0x10128c7d0</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p></p>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-22T14:15:33+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
       
       
       <div class="row">

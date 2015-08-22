@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 复习 | etund喔喔喔]]></title>
   <link href="http://etund.github.com/tags/fu-xi/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-21T23:19:03+08:00</updated>
+  <updated>2015-08-22T14:28:53+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[浅拷贝与深拷贝]]></title>
+    <link href="http://etund.github.com/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/"/>
+    <updated>2015-08-22T14:15:33+08:00</updated>
+    <id>http://etund.github.com/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei</id>
+    <content type="html"><![CDATA[<h4>深拷贝与浅拷贝</h4>
+
+<ul>
+<li>浅拷贝是指针拷贝，深拷贝是内容拷贝</li>
+<li>产生新对象的时深拷贝，不产生新对象的时浅拷贝</li>
+<li><p>浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。</p></li>
+<li><p>NString与copy(不产生新对象，浅拷贝，指针拷贝)</p></li>
+</ul>
+
+
+<pre><code class="objc">    NSString *str = @"00000000000";
+    NSString *str_0 = [str copy];
+    NSLog(@"%p---------%p",str,str_0);
+    /**输出结果
+    2015-08-22 12:42:24.992 Text[1143:32063] 0x10128c7d0---------0x10128c7d0
+    */
+</code></pre>
+
+<!-- more -->
+
+
+<ul>
+<li>NString与mutableCopy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<pre><code class="objc">    NSString *str = @"00000000000";
+    NSString *str_0 = [str mutableCopy];
+    NSLog(@"%p---------%p",str,str_0);
+    /**输出结果
+    2015-08-22 12:44:39.582 Text[1183:33573] 0x1042cb7d0---------0x7f9bf401a910
+    */
+</code></pre>
+
+<ul>
+<li>NSMutableString与copy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<pre><code class="objc">    NSMutableString *str = [[NSMutableString alloc] initWithString:@"-----------"];
+    NSMutableString *str_0 = [str copy];
+    NSLog(@"%p---------%p",str,str_0);
+    /**输出结果
+    2015-08-22 12:47:06.886 Text[1219:34965] 0x7fa5e26107d0---------0x7fa5e260fc00
+    */
+</code></pre>
+
+<ul>
+<li>NSMutableString与copy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<pre><code class="objc">    NSMutableString *str = [[NSMutableString alloc] initWithString:@"-----------"];
+    NSMutableString *str_0 = [str mutableCopy];
+    NSLog(@"%p---------%p",str,str_0);
+    /**输出结果
+    2015-08-22 12:48:26.251 Text[1247:36136] 0x7f8450725d40---------0x7f8450738150
+    */
+</code></pre>
+
+<ul>
+<li>小结：
+
+<ul>
+<li>NS<em> 调用copy方法是浅拷贝，调用mutableCopy方法是深拷贝，NSMutable</em> 调用mutableCopy和copy是深拷贝。</li>
+<li>浅拷贝，在ARC中，由于自动管理内存，使用retain关键字进行引用计数，就是一种更加保险的浅拷贝，它既让几个指针共用同一片内存空间，又可以在release由于计数的存在，不会轻易的销毁内存，达到更加建档使用的目的</li>
+<li>深拷贝是指拷贝对象的具体内容，而内存地址是自主分配的，拷贝结束之后，两个对象虽然存在的值是相同的，但内存地址不一样，两个对象也互不影响，互补干涉。</li>
+</ul>
+</li>
+</ul>
+
+
+<p><img src="/images/blog/qiancopyyushenkaobei/Snip20150822_2.png" alt="" /></p>
+
+<h4>拷贝构造</h4>
+
+<ul>
+<li>在ios中不不是所有的对象原始就支持copy和mutableCopy，即使你可以调用这个方法且编译通过，但是在运行的时候会提示找不到方法copywithzone 或者 mutableCopyWithZone。所以如果其他类也想实现深拷贝或者浅拷贝的时候，要遵循NSMutableCopying或者NSCopying协议并且实现copyWithZone或者mutableCopyWithZone方法来实现深拷贝或浅拷贝。</li>
+<li>举个栗子
+
+<ul>
+<li>没有实现copying的时候对AClass的实例进行copy,编译通过,但是运行报错
+<img src="/images/blog/qiancopyyushenkaobei/Snip20150822_1.png" alt="" /></li>
+<li>接下来我们来继承NSCopying协议并且实现对应的方法</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">- (id)copyWithZone:(NSZone *)zone{
+    AClass *aclass = [[self class] allocWithZone:zone];
+    aclass.name = [_name mutableCopy];
+    aclass.age = _age;
+    return aclass;
+}
+</code></pre>
+
+<ul>
+<li>之后在运行之前的代码</li>
+</ul>
+
+
+<pre><code class="objc">    AClass *aclass = [[AClass alloc] init];
+    aclass.name = @"00000000";
+    aclass.age = 10;
+    AClass *aclass_0 = [aclass copy];
+    NSLog(@"%@--------------%@",aclass,aclass_0);
+    /*输出结果
+    2015-08-22 14:07:11.509 Text[4180:74165] &lt;AClass: 0x7f91932298c0&gt;--------------&lt;AClass: 0x7f9193229770&gt;
+    */
+</code></pre>
+
+<ul>
+<li>小结：至于NSCopying同理。</li>
+</ul>
+
+
+<h4>参考文章</h4>
+
+<ul>
+<li><a href="http://www.cocoachina.com/ios/20141113/10213.html">Objective-C中的浅拷贝和深拷贝</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[多线程(一)]]></title>
