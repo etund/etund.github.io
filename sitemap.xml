@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://etund.github.com/blog/2015/08/22/qqyin-le-zong-jie/</loc>
+    <lastmod>2015-08-22T14:40:29+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://etund.github.com/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/</loc>
     <lastmod>2015-08-22T14:15:33+08:00</lastmod>
   </url>
@@ -17,13 +21,13 @@
     <lastmod>2015-08-21T22:13:01+08:00</lastmod>
   </url>
   <url>
-    <loc>http://etund.github.com/blog/archives/</loc>
+    <loc>http://etund.github.com/blog/gallery/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/</loc>
   </url>
   <url>
-    <loc>http://etund.github.com/blog/gallery/</loc>
+    <loc>http://etund.github.com/blog/archives/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/posts/</loc>
@@ -45,6 +49,9 @@
   </url>
   <url>
     <loc>http://etund.github.com/tags/suo-xiang/</loc>
+  </url>
+  <url>
+    <loc>http://etund.github.com/tags/xiang-mu/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/blog/intruduction/index.html</loc>

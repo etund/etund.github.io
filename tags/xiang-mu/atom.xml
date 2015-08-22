@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 项目 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/xiang-mu/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-08-22T15:12:02+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[QQ音乐总结]]></title>
+    <link href="http://etund.github.com/blog/2015/08/22/qqyin-le-zong-jie/"/>
+    <updated>2015-08-22T14:40:29+08:00</updated>
+    <id>http://etund.github.com/blog/2015/08/22/qqyin-le-zong-jie</id>
+    <content type="html"><![CDATA[<h4>前言</h4>
+
+<ul>
+<li>对于项目，有些细节以及小技巧是网上很难表达的，也很难找到，这需要经验的积累，如果有某些有经验的开发人员教你一些小技巧，经验心得，一定要总结，这样就可以少走很多弯路，所以很感谢<a href="http://www.520it.com/index.htm">小码哥</a>的老师。</li>
+<li>多媒体有别于我们一般的接触的项目，一切都值得记录。</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h4>小技巧</h4>
+
+<ul>
+<li>蒙版实现(实现方式可以利用第三方框架，也可以用ToolBar实现，这里用ToolBar)</li>
+</ul>
+
+
+<pre><code class="objc">    UIToolbar *toolBar = [[UIToolbar alloc] init];
+    [toolBar setBarStyle:UIBarStyleBlack];
+    toolBar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.backgrounImgeView addSubview:toolBar];
+    [toolBar makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.backgrounImgeView);
+    }];
+</code></pre>
+
+<ul>
+<li>动画开始或暂停
+
+<ul>
+<li>两个CALayer的分类(可以把核心动画在不移除的情况下暂停或开始)</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">    - (void)pauseAnimate
+{
+    CFTimeInterval pausedTime = [self convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.speed = 0.0;
+    self.timeOffset = pausedTime;
+}
+
+- (void)resumeAnimate
+{
+    CFTimeInterval pausedTime = [self timeOffset];
+    self.speed = 1.0;
+    self.timeOffset = 0.0;
+    self.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [self convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
+    self.beginTime = timeSincePause;
+}
+</code></pre>
+
+<ul>
+<li>由于某些数据是在多个类都可以用到，所以，这里可以把一个工具类作为传输数据的桥梁，可以在一定程度上较少代码冗余。</li>
+<li>歌词染色
+
+<ul>
+<li>在歌曲播放过程中，我们需要监听歌曲播放到哪里然后把一句歌词的部分高亮，如果之前没有接触过的话，直接想不到了。</li>
+<li>这是我们可以自定义歌词label，然后再重写draw in rect的方法，根据传入的播放进度来染色，主要代码如下。</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">- (void)setProgress:(CGFloat)progress{
+    _progress = progress;
+    [self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect{
+    [super drawRect:rect];
+//    获取需要画的区域
+    CGRect fillRect = CGRectMake(0, 0, self.bounds.size.width * self.progress, self.bounds.size.height);
+//    设置颜色
+    [[UIColor orangeColor] set];
+//    添加区域
+    UIRectFillUsingBlendMode(fillRect, kCGBlendModeSourceIn);
+}
+</code></pre>
+
+<p><code>UIRectFillUsingBlendMode这个方法第一个参数的填充的方式，而第二个参数是填充的颜色的方式，解释如下</code></p>
+
+<pre><code class="objc">/* Available in Mac OS X 10.5 &amp; later. R, S, and D are, respectively,
+       premultiplied result, source, and destination colors with alpha; Ra,
+       Sa, and Da are the alpha components of these colors.
+
+       The Porter-Duff "source over" mode is called `kCGBlendModeNormal':
+         R = S + D*(1 - Sa)
+
+       Note that the Porter-Duff "XOR" mode is only titularly related to the
+       classical bitmap XOR operation (which is unsupported by
+       CoreGraphics). */
+
+    kCGBlendModeClear,          /* R = 0 */
+    kCGBlendModeCopy,           /* R = S */
+    kCGBlendModeSourceIn,       /* R = S*Da */
+    kCGBlendModeSourceOut,      /* R = S*(1 - Da) */
+    kCGBlendModeSourceAtop,     /* R = S*Da + D*(1 - Sa) */
+    kCGBlendModeDestinationOver,    /* R = S*(1 - Da) + D */
+    kCGBlendModeDestinationIn,      /* R = D*Sa */
+    kCGBlendModeDestinationOut,     /* R = D*(1 - Sa) */
+    kCGBlendModeDestinationAtop,    /* R = S*(1 - Da) + D*Sa */
+    kCGBlendModeXOR,            /* R = S*(1 - Da) + D*(1 - Sa) */
+    kCGBlendModePlusDarker,     /* R = MAX(0, (1 - D) + (1 - S)) */
+    kCGBlendModePlusLighter     /* R = MIN(1, S + D) */
+</code></pre>
+
+<ul>
+<li>上面解释大概的意思就是：R表示计算结果，S：表示包含alpha的源颜色,D表示包含alpha的目标颜色，Sa  Da 分别是对应颜色的alpha值，每个枚举后面是计算的公式，先简单记一下吧，以后在深入研究。</li>
+</ul>
+
+
+<h4>开始播放</h4>
+
+<p><code>我的主要思路如下</code></p>
+
+<ul>
+<li>界面更新
+
+<ul>
+<li>时间的变化时时更新</li>
+<li>歌曲名字,歌手名字，图片，只更新一遍</li>
+</ul>
+</li>
+<li>滑条的变化
+
+<ul>
+<li>如何让滑条的变化来控制歌曲的播放进度？
+
+<ul>
+<li>获取滑条的变化。</li>
+<li>控制歌曲的进度。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>监听歌词的变化
+
+<ul>
+<li>UIScrollVie约束实现原则
+
+<ul>
+<li>scrollView必须有宽高和位置(也就是四重奏)</li>
+<li>然后按照正常人的四维约束scrollView的子控件，但是子控件必须包含宽高</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>遇到问题</h4>
+
+<ul>
+<li>AVAudioPlayer的底层实现会内存泄露</li>
+<li>为什么调用prepareToPlay出现断点？(在添加全局断点的时候就会出现断点)
+
+<pre><code>  - 现在分析一下代码如下
+</code></pre></li>
+</ul>
+
+
+<pre><code class="objc">        AVAudioPlayer *player  = nil;
+        player = _players[musicName];
+        if (player == nil) {
+        NSURL *url = [[NSBundle mainBundle] URLForResource:musicName withExtension:nil];
+        if (url == nil) return nil;
+        player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+        [_players setObject:player forKey:musicName];
+        [player prepareToPlay];
+        }
+        [player play];
+</code></pre>
+
+<ul>
+<li><p>现在情况是player不为空且正确，但是调用prepareToPlay方法的时候就会停留在这里并且停5次，但是<code>if (player == nil)</code>外面只执行一次，但是为什么会这样呢？那只能说明这个方法有问题了，于是我把全局断点只监听OC代码块的，像这样。</p>
+
+<p>  <img src="/images/blog/qqyinyuebofangqi/Snip20150821_3.png" alt="" />
+  <img src="/images/blog/qqyinyuebofangqi/Snip20150821_4.png" alt="" />
+  <img src="/images/blog/qqyinyuebofangqi/Snip20150821_6.png" alt="" /></p></li>
+<li><p>这样问题就解决了，于是乎，我又试着监听C++代码块的，果然问题又出现了，啊，C++这东西在苹果对于我们基本上是不可见了，但它底层实现有问题啊，额&hellip;，这样的话，我们就要试着寻求新的播放框架了.<code>值得一提的是后面调用这个实例的stop方法也会出现类似情况</code></p></li>
+<li>之后用instruments内存分析，发现的确存在内存泄露，内存泄露的问题出在底层内部，不懂，如下图
+  <img src="/images/blog/qqyinyuebofangqi/Snip20150821_2.png" alt="" /></li>
+</ul>
+
+
+<h4>音乐控制歌词</h4>
+
+<ul>
+<li><p>歌词解析</p>
+
+<ul>
+<li>从文件里面加载数据</li>
+<li>把数据分割为一行一行作为一个对象</li>
+<li>把一行一行分割成属性</li>
+<li>获取当前的时间</li>
+<li>对比模型的时间，如果大于当前时间小于下一个时间，或者下一行为空，显示当前行，刷新当前行和上一上，滚到对应的歌词</li>
+<li>对比歌词</li>
+</ul>
+</li>
+<li><p>歌词美化</p>
+
+<ul>
+<li>获取单行的播放进度</li>
+<li>上色，放大
+
+<ul>
+<li>当我们给歌词上色的时候，会出现重用cell的时候，cell重复的没有褪色？
+
+<ul>
+<li>tableView的数据源方法返回cell的时候，判断cell的是否是当前要显示的行，来让cell退色。</li>
+</ul>
+</li>
+<li>但是这里歌词会卡顿，那是因为定时器的设的时间跟监听歌播放时间的定时器一样是一秒，太长了，所以这里要单独给歌词添加一个定时器。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>锁屏显示</h4>
+
+<ul>
+<li>数据获取
+
+<ul>
+<li> (歌词)获取icon，获取前一句歌词，下一句歌词，当前歌词，然后画图，</li>
+</ul>
+</li>
+<li>显示歌名，背景图
+
+<ul>
+<li>在设置界面的Capabilities里面开启后台模式，并且选择后台播放音频
+<img src="/images/blog/qqyinyuebofangqi/Snip20150821_5.png" alt="" /></li>
+<li>在代理(AppDelegate)里面添加激活会话
+<code>objc
+// Override point for customization after application launch.
+//    获取音频回话
+AVAudioSession *session = [AVAudioSession sharedInstance];
+//    设置后台播放类别
+[session setCategory:AVAudioSessionCategoryPlayback error:nil];
+//    激活会话
+[session setActive:YES error:nil];
+</code></li>
+</ul>
+</li>
+</ul>
+
+
+<h4>其他</h4>
+
+<ul>
+<li><p>傻傻分不清stringWithContentsOfFile:usedEncoding:error: 与 stringWithContentsOfFile:encoding:error:</p>
+
+<ul>
+<li>stringWithContentsOfFile:usedEncoding:error:这个方法是智能判断一段字符串使用什么编码，而usedEncoding是要我们存进一个内存地址，用于存放它的真实编码方式，我们可以通过后续打印这个参数来看看它真实的编码方式</li>
+<li>stringWithContentsOfFile:encoding:error:这个方法是我们已经知道了这个编码方式，要他必须按照我们的编码方式来解码。</li>
+</ul>
+</li>
+<li><p>componentsSeparatedByString:这个方法用于切割歌词按照一个分割来分割字符串并返回分割后的字符串的数组。</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
