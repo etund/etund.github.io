@@ -4,7 +4,7 @@
   <title><![CDATA[etund喔喔喔]]></title>
   <link href="http://etund.github.com/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-22T19:59:09+08:00</updated>
+  <updated>2015-08-24T01:23:44+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -12,6 +12,175 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Objective-C_Runtime(一)]]></title>
+    <link href="http://etund.github.com/blog/2015/08/24/objective-c-runtime-%5B%3F%5D/"/>
+    <updated>2015-08-24T01:16:29+08:00</updated>
+    <id>http://etund.github.com/blog/2015/08/24/objective-c-runtime-[?]</id>
+    <content type="html"><![CDATA[<p><img src="http://etund.github.com/images/blog/Objective-c-Runtime/1436240778601754.jpg" alt="" /></p>
+
+<h3>前言</h3>
+
+<ul>
+<li>此博文仅仅用于本人的读书笔记，一切以官方的为准<a href="https://developer.apple.com/library/prerelease/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">官方文档</a></li>
+<li>Objective-C语言将决定尽可能的从编译和连接时推迟到运行时，只要有可能Objective-C总是使用动态的方式来解决问题。这意味着Objective-C语言不仅需要一个编译器，同时也需要一个运行时系统来执行编译好的代码。这儿的运行时系统扮演的角色类似于Objective-C语言的操作系统，Objective-C基于该系统来工作。</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h3>和Runtime系统的交互</h3>
+
+<ul>
+<li>Objective-C程序有三种途径各运行时系统交互
+
+<ul>
+<li>通过Objective-C源代码：意思就是你自己写代码发消息，然后在编译的时候，编译器为实现语言动态特性将自动创建一些数据结构和函数，而这些数据结构就包含类定义和协议类定义中的信息，如类的对象，协议类的对象，方法选标，实例变量模板，以及其他来自于源代码的信息。运行时系统的主要功能就是根据源代码中得表法师发送消息。</li>
+<li>通过Foundation框架中NSObject的方法:由于Cocoa框架里面大多数类是集成自NSObject，而NSObject里面有很多方法都是可以在运行时获取动态信息，例如，NSObject的一个description方法，它不知道子类子类的详细信息，所以它直接返回类的名字和对象的地址，子类可以重写该方法来返回更多的信息，例如NSArray，他就把NSArray包含的每个类的内容返回，类似的方法还有isKindOfClass，isMemberOfClass等等一些允许对象在一定程度上自我检查的方法，意思就是说，NSObject提供了很多在运行时获取信息的方法来让我们去调用去拓展。</li>
+<li>通过直接调用运行时系统的函数：运行时系统是一个有公开接口的动态库，有一些数据结构和函数的集合组成，使用时要导包#import &lt;objc/runtime.h>，这些函数是的访问运行时系统借口和提供开发工具成为肯呢过，虽然他们对程序不是必须得，但是有时候对于OC程序来说某些函数是非常有用的，例如我们经常用到的，用来获取一个类的私有属性的时候用到的方法</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">unsigned</span> <span class="n">count</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">Ivar</span> <span class="o">*</span> <span class="n">ivars</span> <span class="o">=</span> <span class="n">class_copyIvarList</span><span class="p">([</span><span class="o">&lt;</span><span class="err">#</span><span class="kt">Class</span><span class="err">#</span><span class="o">&gt;</span> <span class="k">class</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">count</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">Ivar</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">ivars</span><span class="p">;</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">ivars</span> <span class="o">+</span> <span class="n">count</span><span class="p">;</span> <span class="n">p</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">Ivar</span> <span class="k">const</span> <span class="n">ivar</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+</span><span class='line'>        <span class="bp">NSString</span> <span class="o">*</span><span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithUTF8String</span><span class="p">:</span><span class="n">ivar_getName</span><span class="p">(</span><span class="n">ivar</span><span class="p">)];</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span><span class="n">key</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>消息</h3>
+
+<h4>获取方法地址</h4>
+
+<ul>
+<li>避免动态绑定的唯一办法就是去的方法的地址，当一个方法会被连续调用很多次，而且你希望节省每次调用方法都要发送消息的开销时，使用方法地址来调用就显得很有效。</li>
+<li>利用NSObject类中得methodForSelector:方法，你可以获得一个指向<code>方法实现</code>的指针，并且可以使用该指针直接调用方法实现。methodForSelector:返回的指针和复制的变量类型必须完全一致，包括方法的参数诶性和返回值类型都在类型识别的考虑范围中。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="k">setter</span><span class="p">)(</span><span class="kt">id</span> <span class="p">,</span> <span class="kt">SEL</span><span class="p">,</span><span class="kt">BOOL</span><span class="p">);</span><span class="c1">//这里类似于Block Block是指向结构体的指针，这是指向函数的指针</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'><span class="k">setter</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="kt">id</span><span class="p">,</span><span class="kt">SEL</span><span class="p">,</span><span class="n">BOOK</span><span class="p">))[</span><span class="n">target</span> <span class="nl">methodForSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">setFilled</span><span class="p">)];</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'><span class="k">setter</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="k">@selector</span><span class="p">(</span><span class="nl">setFilled</span><span class="p">:)</span> <span class="p">,</span><span class="nb">YES</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>方法指针的第一个参数是接受消息的对象(self),第二个参数是方法选标(_cmd),这两个参数在方法中是隐藏参数，但使用函数的形式来调用方法是必须显示的给出。</li>
+<li>使用methodForSelector:来避免动态绑定讲较少大部分消息的开销，但是这只有在制定的消息被重复发送很多次是才有意义。
+<code>注意,methodForSelector:是 Cocoa 运行时系统的提供的功能,而不是 Objective-C 语言本身的功 能。</code></li>
+</ul>
+
+
+<h4>objc_msgSend函数</h4>
+
+<ul>
+<li>在Objective-C中，消息是知道运行的事后彩盒方法实现绑定的，编译器会把一个消息表达式</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">receiver</span> <span class="n">messgae</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>转换成一个对消息函数objc_msgSend的调用，干函数有两个主要参数，消息接受者和消息对应的名字&mdash;也就是方法的选标，也就是上面所说的指向函数的指针。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>同时接收消息中得任意数目的参数，返回的指针和复制的变量类型必须完全一致，包括方法的参数诶性和返回值类型都在类型识别的考虑范围中。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="err">￼￼￼￼</span><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>该消息函数做了动态绑定所需要得一切
+
+<ul>
+<li>他首先找到选标对应的方法实现。</li>
+<li>然后讲消息接受者对象 ，以及方法中制定的参数传给找到的方法实现</li>
+<li>最后讲方法实现的返回值作为该函数的返回值返回,<code>注意:编译器将自动插入调用该消息函数的代码。您无须在代码中显示调用该消息函数。消息机制的关键在于编译器为类和对象生成的结构。每个类的结构中至少包括两个基本元素:(self和_cmd)</code></li>
+<li>指向父类的指针。</li>
+<li>类的方法表。方法表讲方法选标和该类的方法实现地址以key-value的方式存起来。</li>
+</ul>
+</li>
+<li>当新的对象被创建是，其内存同时被分配，实例变量也同时被初始化。对象的<code>第一个实例变量</code>是一个指向该对象的类结构的指针，叫做isa，通过该指针对象可以访问他对应类以及相应的父类。
+<code>注意：尽管严格来说这并不是Objective-C语言的一部分，但是在Objective-C运行时系统中对象需要有isa指针。对象和结构体struct objc_object(在objc/objc.h中定义)必须一致，燃和你很少需要创建你自己的跟对象，因为从NSObject或者NSProxy继承的对象都自动包括isa变量</code></li>
+</ul>
+
+
+<p><img src="http://etund.github.com/images/blog/Objective-c-Runtime/messaging1.gif" alt="消息框架" /></p>
+
+<ul>
+<li>当对象收到消息后，消息函数首先根据对象的isa指针找到该对象所对应累的方法表，并从表中寻找该消息对应的方法选标。如果找不到，objc_msgSend将继续从父类中找，知道NSObject类。一旦找到方法，一旦找到方法选标，objc_msgSend则以消息接收者对象为参数调用，调用该选标对应的方法实现。这就是在运行时系统徐哲方法实现的方式，在面向对象编程中(例如java编程),一般承租方法和消息动态绑定的过程。</li>
+<li>为了加快消息的处理过程，运行时系统通常会讲使用过的方法选标和方法实现的地址翻入缓存，如果一个方法被使用过一次，那么它很有可能被再次使用，如果缓存中已经有了需要的方法选标，则消息仅仅比函数调用慢一点点，如果程序运行了足够长的时间，几乎每个消息都能在混村中找到那方法实现。程序运行时，混存也将随着新的消息的增加而增加。</li>
+</ul>
+
+
+<h4>使用隐藏参数</h4>
+
+<ul>
+<li>当objc_msgSend找到方法对应的实现时，它将直接调用该方法实现，并将消息中所有的参数搜传递给方法实现，同时它还将传递两个隐藏的参数：(self和_cmd)，具体怎么调用这两个隐藏参数，请看以下代码。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="nf">strange</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="kt">id</span> <span class="n">target</span> <span class="o">=</span> <span class="n">getTheReceiver</span><span class="p">();</span>
+</span><span class='line'><span class="kt">SEL</span> <span class="n">method</span> <span class="o">=</span> <span class="n">getTheMethod</span><span class="p">();</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span> <span class="n">target</span> <span class="o">==</span> <span class="nb">self</span> <span class="o">||</span> <span class="n">method</span> <span class="o">==</span> <span class="n">_cmd</span> <span class="p">)</span>
+</span><span class='line'><span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">return</span> <span class="p">[</span><span class="n">target</span> <span class="nl">performSelector</span><span class="p">:</span><span class="n">method</span><span class="p">];</span>
+</span><span class='line'><span class="err">￼</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>参考博文</h3>
+
+<p><a href="http://blog.devtang.com/blog/2013/04/29/the-missing-objc-keywords/">那些被遗漏的Objective-C保留字</a></p>
+
+<p><a href="http://onevcat.com/2012/04/objective-c-runtime/">深入Objective-C的动态特性</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[百思不得姐-项目总结(五)]]></title>
