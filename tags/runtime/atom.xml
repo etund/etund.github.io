@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Runtime | etund喔喔喔]]></title>
   <link href="http://etund.github.com/tags/runtime/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-24T19:49:55+08:00</updated>
+  <updated>2015-08-24T19:54:08+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -18,7 +18,9 @@
     <link href="http://etund.github.com/blog/2015/08/24/objective-c-runtime-er/"/>
     <updated>2015-08-24T19:43:52+08:00</updated>
     <id>http://etund.github.com/blog/2015/08/24/objective-c-runtime-er</id>
-    <content type="html"><![CDATA[<h3>动态方法解析</h3>
+    <content type="html"><![CDATA[<p><img src="/images/blog/Objective-c-Runtime/1436240778601754.jpg" alt="" /></p>
+
+<h3>动态方法解析</h3>
 
 <h4>动态方法解析</h4>
 
