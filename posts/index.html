@@ -344,7 +344,7 @@
 
 
 <ul>
-<li>表示编译器须动态的生成该属性对应的方法，<code>注意：￼￼￼￼@dynamic与@property一样都可以自动生成setter和getter方法，知识@property是变异阶段生成的，而@dynamic是手工生成或者运行时自动生成。</code></li>
+<li>表示编译器须动态的生成该属性对应的方法，<code>注意：￼￼￼￼@dynamic与@property一样都可以自动生成setter和getter方法，知识@property是编译阶段生成的，而@dynamic是手工生成或者运行时自动生成。</code></li>
 <li>此外，还可以通过实现resolveInstanceMethod;和resolveeClassMethod；来动态地实现给定选标的对象方法或者类方法。</li>
 <li>OC方法可以认为是至少两个参数的self和_cmd的C函数。你可以通过class_andMethod方法讲一个函数加入到类的方法中。例如，有如下函数：</li>
 </ul>
@@ -1058,11 +1058,13 @@
 <!-- Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a> --></footer>
 		</div>
 	</div>
-	
-
-
-
-
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
