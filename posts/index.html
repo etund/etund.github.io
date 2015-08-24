@@ -998,6 +998,53 @@
         </div>
       </div>
       
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/20/uinavigationri-chang-bug/">UINavigation日常Bug</a></h2>
+  
+  <p>
+    <h3>UINavigation日常Bug</h3>
+
+
+
+
+<ul>
+<li>今天在做一个小Demo,发现一个Bug，挺有意思的，就是在你不断调用Navigation<code>- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;</code>方法的时候，发现在不断点击一个按钮来调用这个方法，在点击返回调用<code>- (UIViewController *)popViewControllerAnimated:(BOOL)animated;</code>这个方法，这是在多次点击返回不但没有返回，还多次向Navigition里面添加控制器。<img src="/images/blog/UINavigationBug/bug_0.gif" alt="" /></li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-20T19:59:31+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/20/uinavigationri-chang-bug/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
     </div>
   </div>
 </div>
