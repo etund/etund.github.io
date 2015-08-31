@@ -1,0 +1,533 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>多对象内存管理 - etund喔喔喔</title>
+	<meta name="author" content="etund">
+
+	
+	<meta name="description" content="多对象内存管理 多对象内存管理(非ARC) 在非ARC中，多个对象内存管理要注意一些问题，例如循环利用，还有就是自己手写Set方法的时候要注意一些问题
+指针释放 (set方法) 1
+2
+3
+4
+5
+6 Person *per = [[Person alloc] init]; Room *r1 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://etund.github.com/blog/2014/06/01/duo-dui-xiang-nei-cun-guan-li/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			// $('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("a925813235z@qq.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='/images/profine/profine.jpeg' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+</div>
+
+<nav id="main-nav"><!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<html>
+<!-- <head> -->
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/buttons.css" />
+</head> -->
+<!-- <body> -->
+<div id="buttonContainer">
+    <a href="/" class="button small gray rounded">主页 | Blog</a><br/><br/>
+    <a href="/blog/archives" class="button small gray rounded">归档目录 | Archives</a><br/><br/>
+    <a href="/intruduction" class="button small gray rounded">关于我 | About</a><br/><br/>
+    <a href="/link" class="button small gray rounded">链接 | Links</a><br/><br/>
+</div>
+<!-- </body> -->
+</html>
+<style type="text/css">
+.button{
+    font:15px Calibri, Arial, sans-serif;
+
+    /* A semi-transparent text shadow */
+    text-shadow:1px 1px 0 rgba(255,255,255,0.4);
+    
+    /* Overriding the default underline styling of the links */
+    text-decoration:none !important;
+    white-space:nowrap;
+    
+    display:inline-block;
+    vertical-align:baseline;
+    position:relative;
+    cursor:pointer;
+    padding:10px 20px;
+    
+    background-repeat:no-repeat;
+
+    /* The following two rules are fallbacks, in case
+       the browser does not support multiple backgrounds. */
+
+    background-position:bottom left;
+    background-image:url('/images/button_bg.png');
+    
+    /* Multiple backgrounds version. The background images
+       are defined individually in color classes */
+    
+    background-position:bottom left, top right, 0 0, 0 0;
+    background-clip:border-box;
+    
+    /* Applying a default border raidus of 8px */
+    
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    border-radius:8px;
+    
+    /* A 1px highlight inside of the button */
+    
+    -moz-box-shadow:0 0 1px #fff inset;
+    -webkit-box-shadow:0 0 1px #fff inset;
+    box-shadow:0 0 1px #fff inset;
+    
+    /* Animating the background positions with CSS3 */
+    /* Currently works only in Safari/Chrome */
+    
+    -webkit-transition:background-position 1s;
+    -moz-transition:background-position 1s;
+    transition:background-position 1s;
+}
+
+.button:hover{
+    
+    /* The first rule is a fallback, in case the browser
+       does not support multiple backgrounds
+    */
+    
+    background-position:top left;
+    background-position:top left, bottom right, 0 0, 0 0;
+}
+
+.button:active{
+    /* Moving the button 1px to the bottom when clicked */
+    bottom:-1px;
+}
+
+/* The three buttons sizes */
+
+.button.big     { font-size:30px;}
+.button.medium  { font-size:18px;}
+.button.small   { font-size:13px;}
+
+/* A more rounded button */
+
+.button.rounded{
+    -moz-border-radius:4em;
+    -webkit-border-radius:4em;
+    border-radius:4em;
+}
+
+
+/* Defining four button colors */
+
+
+/* BlueButton */
+
+.blue.button{
+    color:#0f4b6d !important;
+    
+    border:1px solid #84acc3 !important;
+    
+    /* A fallback background color */
+    background-color: #48b5f2;
+    
+    /* Specifying a version with gradients according to */
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(89,208,244,1) 0,rgba(89,208,244,0) 100px),
+                        -moz-linear-gradient(#4fbbf7, #3faeeb);
+
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(89,208,244,1)), to(rgba(89,208,244,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
+}
+
+.blue.button:hover{
+    background-color:#63c7fe;
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(109,217,250,1) 0,rgba(109,217,250,0) 100px),
+                        -moz-linear-gradient(#63c7fe, #58bef7);
+                        
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(109,217,250,1)), to(rgba(109,217,250,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#63c7fe), to(#58bef7));
+}
+
+/* Green Button */
+
+.green.button{
+    color:#345903 !important;
+    border:1px solid #96a37b !important;    
+    background-color: #79be1e;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(162,211,30,1) 0,rgba(162,211,30,0) 100px),-moz-linear-gradient(#82cc27, #74b317);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(162,211,30,1)), to(rgba(162,211,30,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
+}
+
+.green.button:hover{
+    background-color:#89d228;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(183,229,45,1) 0,rgba(183,229,45,0) 100px),-moz-linear-gradient(#90de31, #7fc01e);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
+}
+
+/* Orange Button */
+
+.orange.button{
+    color:#693e0a !important;
+    border:1px solid #bea280 !important;    
+    background-color: #e38d27;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(232,189,45,1) 0,rgba(232,189,45,0) 100px),-moz-linear-gradient(#f1982f, #d4821f);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(232,189,45,1)), to(rgba(232,189,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f1982f), to(#d4821f));
+}
+
+.orange.button:hover{
+    background-color:#ec9732;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(241,192,52,1) 0,rgba(241,192,52,0) 100px),-moz-linear-gradient(#f9a746, #e18f2b);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(241,192,52,1)), to(rgba(241,192,52,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9a746), to(#e18f2b));
+}
+
+.gray.button{
+    color:#525252 !important;
+    border:1px solid #a5a5a5 !important;    
+    background-color: #a9adb1;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(197,199,202,1) 0,rgba(197,199,202,0) 100px),-moz-linear-gradient(#c5c7ca, #92989c);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(197,199,202,1)), to(rgba(197,199,202,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c5c7ca), to(#92989c));
+}
+
+.gray.button:hover{
+    background-color:#b6bbc0;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(202,205,208,1) 0,rgba(202,205,208,0) 100px),-moz-linear-gradient(#d1d3d6, #9fa5a9);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(202,205,208,1)), to(rgba(202,205,208,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#d1d3d6), to(#9fa5a9));
+}
+
+</style>
+
+<section class="aboutme">
+  <p>
+    点滴记载,技术,设计,生活
+  </p>
+</section>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+			<a class="email" href="mailto:a925813235z@qq.com" title="Email">Email</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/etund" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">多对象内存管理</h1>
+	<div class="entry-content" itemprop="articleBody"><h3>多对象内存管理(非ARC)</h3>
+
+<ul>
+<li>在非ARC中，多个对象内存管理要注意一些问题，例如循环利用，还有就是自己手写Set方法的时候要注意一些问题</li>
+<li>指针释放 (set方法)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'>  <span class="n">Person</span> <span class="o">*</span><span class="n">per</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">Room</span> <span class="o">*</span><span class="n">r1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Room</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">r1</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">per</span> <span class="k">release</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>由于执行完per.room = r1之后有两个指针指向同一份内存，[r1 release]后,r1所指向的内存空间被回收掉了，我们如果再像调用per.room就会报<code>message sent to deallocated instance</code>错误，所以我们要在Person里面做一些操作</li>
+</ul>
+
+
+<!-- more -->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setRoom:</span><span class="p">(</span><span class="n">Room</span> <span class="o">*</span><span class="p">)</span><span class="nv">room</span><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">room</span> <span class="k">retain</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">_room</span> <span class="o">=</span> <span class="n">room</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">_room</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">super</span> <span class="n">dealloc</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>如果当我们要把per.room 的指针指向其他Room对象的时候，例如</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'>  <span class="n">Person</span> <span class="o">*</span><span class="n">per</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">Room</span> <span class="o">*</span><span class="n">r1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Room</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">Room</span> <span class="o">*</span><span class="n">r2</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Room</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%zd&quot;</span><span class="p">,[</span><span class="n">r1</span> <span class="n">retainCount</span><span class="p">]);</span>
+</span><span class='line'>    <span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r2</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%zd&quot;</span><span class="p">,[</span><span class="n">r1</span> <span class="n">retainCount</span><span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">r1</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span><span class="n">per</span><span class="p">.</span><span class="n">room</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">per</span> <span class="k">release</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>这是Room不会调用r1的dealloc方法，因为之前在set方法里面执行了一次retain操作，后面没有release操作，所以在set方法里面要先对前面的对象做一次release操作</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setRoom:</span><span class="p">(</span><span class="n">Room</span> <span class="o">*</span><span class="p">)</span><span class="nv">room</span><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">_room</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">room</span> <span class="k">retain</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">_room</span> <span class="o">=</span> <span class="n">room</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>但是，如果我们继续不断调用set方法，例如</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">r1</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">r2</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'><span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r2</span><span class="p">;</span>
+</span><span class='line'><span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r2</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>系统就汇报野指针错误<code>message sent to deallocated instance 0x10020a4f0</code>,这是，因为当我们执行set方法的时候，room指向的内存的计数器为1 ,我们上面做的操作是在set方法里面先做release,当person的<em>room属性跟传进来的room属性一样的时候，那么在[</em>room release]后面room指向的就成了僵尸对象，那么room就成了野指针，所以会报坏内存访问，这时要做如下操作</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setRoom:</span><span class="p">(</span><span class="n">Room</span> <span class="o">*</span><span class="p">)</span><span class="nv">room</span><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">_room</span> <span class="o">!=</span> <span class="n">room</span><span class="p">){</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">_room</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">_room</span> <span class="o">=</span> <span class="p">[</span><span class="n">room</span> <span class="k">retain</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>总结：谁retain谁release</code></p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	
+    <style>
+    .flash-video{display:none;}
+</style>
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a class="jiathis_button_t163">网易微博</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_renren">人人网</a>
+<a class="jiathis_button_douban">豆瓣</a>
+
+<a href="http://www.jiathis.com/share?uid=1574434" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+    data_track_clickback:true,
+    sm:"t163,tsina,tqq,renren,douban",
+    summary:"",
+    hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js?uid=1574434" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+<!-- <br /> -->
+<!-- UY BEGIN -->
+<!-- <div id="uyan_frame"></div>
+<script type="text/javascript" id="UYScript" src="http://v1.uyan.cc/js/iframe.js?UYUserId=89581" async=""></script>
+ --><!-- UY END -->
+  	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="多对象内存管理"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"etund"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2015
+
+    etund
+
+
+<!-- Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a> --></footer>
+		</div>
+	</div>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>

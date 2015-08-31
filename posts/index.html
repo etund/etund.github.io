@@ -9,9 +9,14 @@
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="All Posts Objective-C_Runtime(二) 动态方法解析 动态方法解析 这里描述怎样动态提供一个方法的实现
-有时候需要动态的提供一个方法的实现，例如OC中属性Property 1
-￼￼￼￼@dynamic propertyName; 表示编译器须动态的生成该属性对应的方法， &hellip;">
+	<meta name="description" content="All Posts QQ粘性效果实现详细步骤 QQ粘性效果实现详细步骤 思路 新建自定义UIButton
+添加拖动手势
+计算圆的变化
+计算圆之间矩形并且填充
+回弹
+爆炸 步骤 先完成空间布局以及手势添加
+然后计算圆的变化，计算圆之间的矩形面积
+效果微调 先看看完成后的效果图 written &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -310,7 +315,535 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/24/objective-c-runtime-er/">Objective-C_Runtime(二)</a></h2>
+  <h2><a href="/blog/2015/08/31/qqnian-xing-xiao-guo/">QQ粘性效果实现详细步骤</a></h2>
+  
+  <p>
+    <h2>QQ粘性效果实现详细步骤</h2>
+
+
+
+
+<ul>
+<li>思路
+
+<ul>
+<li>新建自定义UIButton</li>
+<li>添加拖动手势</li>
+<li>计算圆的变化</li>
+<li>计算圆之间矩形并且填充</li>
+<li>回弹</li>
+<li>爆炸</li>
+</ul>
+</li>
+<li>步骤
+
+<ul>
+<li>先完成空间布局以及手势添加</li>
+<li>然后计算圆的变化，计算圆之间的矩形面积</li>
+<li>效果微调</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<h2>先看看完成后的效果图</h2>
+
+
+
+
+<p><img src="/images/blog/QQnianxingxiaoguo/bug_1.gif" alt="效果图" /></p>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-31T23:39:43+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/31/qqnian-xing-xiao-guo/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h2>
+  
+  <p>
+    
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/06/21/runloopshen-du-pou-xi/">RunLoop深度剖析</a></h2>
+  
+  <p>
+    <h1>RunLoop</h1>
+
+
+
+
+<h2>前言</h2>
+
+
+
+
+<ul>
+<li><p>RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。</p></li>
+<li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，<a href="http://www.cocoachina.com/ios/20150601/11970.html">原文</a></p></li>
+<li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/06/21/runloopshen-du-pou-xi/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/02/25/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">百思不得姐-项目总结(五)</a></h2>
+  
+  <p>
+    <h3>功能模块实现(部分)</h3>
+
+
+
+
+<h5>自定义UITextView</h5>
+
+
+
+
+<ul>
+<li>添加内容输入框。
+
+<ul>
+<li>内嵌</li>
+<li>自定义UITextView
+
+<ul>
+<li>占位字符</li>
+</ul>
+</li>
+<li>监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-25T19:50:39+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/02/25/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/02/24/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">百思不得姐-项目总结(四)</a></h2>
+  
+  <p>
+    <h3>哪些网上找不到的经验(二)</h3>
+
+
+
+
+<ul>
+<li>将约束对象翻转
+
+<ul>
+<li>这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。</li>
+</ul>
+</li>
+<li>placeholderlabel是懒加载的。
+
+<pre><code>  - 所以利用KVC设置placeholderlabel的颜色属性的时候要placeholderlabel是否为空。
+</code></pre></li>
+<li>如果我们的控件从xid加载
+
+<ul>
+<li>可以在layoutsubview方法里面设置控件尺寸</li>
+<li>排布子控件不管是从xib加载还是代码加载都不受控制，可以在layoutsubview里面设置</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-24T19:47:07+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/02/24/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/02/23/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">百思不得姐-项目总结(三)</a></h2>
+  
+  <p>
+    <h3>哪些网上找不到的经验(一)</h3>
+
+
+
+
+<ul>
+<li>[UIColor colorWithPatternImage:]设置颜色跟图片一致</li>
+<li>属性后面有Appearance宏，都可以通过Appearance统一设置，例如：UITabarItem</li>
+<li>在分类中声明Property，只会声明方法声明，不会生成方法的实现和下划线属性。</li>
+<li>用imageView的initWithImage图片尺寸会与imageView一样</li>
+<li>如果navbarItem里面是文件，那么item接受事件，如果是Button，那么改button接收事件</li>
+<li>按住Option加回车，UILabel可以换行</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-23T19:26:47+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/02/23/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/02/21/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">百思不得姐-项目总结(二)</a></h2>
+  
+  <p>
+    <h3>小技巧(二)</h3>
+
+
+
+
+<h4>双击菜单栏回到顶部？点击屏幕顶部回到最上面？</h4>
+
+
+
+
+<ul>
+<li><p>在整个应用启动的时候在应用顶部添加一个window用于点击，然后再监听这个window的点击事件。</p></li>
+<li><p>自己自顶一个而一个类，继承window或者NSObject都行，然后定义一个window_成员变量。</p></li>
+</ul>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">window_</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ETScreenW</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">windowLevel</span> <span class="o">=</span> <span class="n">UIWindowLevelAlert</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">window_</span> <span class="nl">addGestureRecognizer</span><span class="p">:[[</span><span class="bp">UITapGestureRecognizer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">windowClick</span><span class="p">)]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-21T19:08:55+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/02/21/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/02/20/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">百思不得姐-项目总结(一)</a></h2>
+  
+  <p>
+    <h3>前言</h3>
+
+
+
+
+<ul>
+<li>这个项目是一个段子类的项目，百思不得姐，一个段子软件，具体情况自己下载来玩吧。</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-20T18:54:55+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/02/20/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2014/08/22/qian-kao-bei-yu-shen-kao-bei/">浅拷贝与深拷贝</a></h2>
+  
+  <p>
+    <h4>深拷贝与浅拷贝</h4>
+
+
+
+
+<ul>
+<li>浅拷贝是指针拷贝，深拷贝是内容拷贝</li>
+<li>产生新对象的时深拷贝，不产生新对象的时浅拷贝</li>
+<li><p>浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。</p></li>
+<li><p>NString与copy(不产生新对象，浅拷贝，指针拷贝)</p></li>
+</ul>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@&quot;00000000000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="k">copy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:42:24.992 Text[1143:32063] 0x10128c7d0---------0x10128c7d0</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p></p>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-22T14:15:33+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/08/22/qian-kao-bei-yu-shen-kao-bei/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2014/07/28/objective-c-runtime-er/">Objective-C_Runtime(二)</a></h2>
   
   <p>
     <p><img src="/images/blog/Objective-c-Runtime/1436240778601754.jpg" alt="" /></p>
@@ -366,14 +899,14 @@
   
 
 
-<time datetime="2015-08-24T19:43:52+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2014-07-28T19:43:52+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/24/objective-c-runtime-er/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/07/28/objective-c-runtime-er/">阅读全文</a>
   
 </article>
 
@@ -384,7 +917,7 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/24/objective-c-runtime-%5B%3F%5D/">Objective-C_Runtime(一)</a></h2>
+  <h2><a href="/blog/2014/07/24/objective-c-runtime-%5B%3F%5D/">Objective-C_Runtime(一)</a></h2>
   
   <p>
     <p><img src="/images/blog/Objective-c-Runtime/1436240778601754.jpg" alt="" /></p>
@@ -419,14 +952,14 @@
   
 
 
-<time datetime="2015-08-24T01:16:29+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2014-07-24T01:16:29+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/24/objective-c-runtime-%5B%3F%5D/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/07/24/objective-c-runtime-%5B%3F%5D/">阅读全文</a>
   
 </article>
 
@@ -437,94 +970,39 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">百思不得姐-项目总结(五)</a></h2>
+  <h2><a href="/blog/2014/07/02/uidynamicjian-dan-shi-yong/">UIDynamic简单使用</a></h2>
   
   <p>
-    <h3>功能模块实现(部分)</h3>
+    <h2>UIDynamic(一)</h2>
 
 
 
 
-<h5>自定义UITextView</h5>
+<h4>前言</h4>
 
 
 
 
 <ul>
-<li>添加内容输入框。
-
-<ul>
-<li>内嵌</li>
-<li>自定义UITextView
-
-<ul>
-<li>占位字符</li>
-</ul>
-</li>
-<li>监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。</li>
-</ul>
-</li>
+<li>最近工作之余，看了一下UIDynamic，UIDynamic是13年WWDC出得技术。其实本人一直热衷于比较有趣的动画，特别是带物理力学的动画，感觉物理力学就是动画的灵魂，一直想找几个小伙伴把物理与动画结合起来，做一下类似于物理引擎的迷你版玩玩，但是由于可支配时间不多，以至于这个夙愿未能完成，但发现UIDynamic这套UIKit自带的物理引擎也挺好玩的，所以先玩几天把，好了，废话不多说，直入正题。</li>
 </ul>
 
 
 
 
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T19:50:39+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">百思不得姐-项目总结(四)</a></h2>
-  
-  <p>
-    <h3>哪些网上找不到的经验(二)</h3>
+<h4>基础</h4>
 
 
 
 
 <ul>
-<li>将约束对象翻转
+<li>概念
 
 <ul>
-<li>这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。</li>
-</ul>
-</li>
-<li>placeholderlabel是懒加载的。
-
-<pre><code>  - 所以利用KVC设置placeholderlabel的颜色属性的时候要placeholderlabel是否为空。
-</code></pre></li>
-<li>如果我们的控件从xid加载
-
-<ul>
-<li>可以在layoutsubview方法里面设置控件尺寸</li>
-<li>排布子控件不管是从xib加载还是代码加载都不受控制，可以在layoutsubview里面设置</li>
+<li>UIDynamicItem:一个控件想要执行UIDynamicAnimator的动画就必须要继承这个协议。</li>
+<li>UIDynamicAnimator:Animator为动态控件提供物理相关的力学和动画，也为这些动画提供了上下文，通过添加Behavier实例来实现想要的动画效果，在以下介绍到的物理力学里面一切动画的源头都是他，也可以说，UIKit的动力学最外层的包装就是它。</li>
+<li>ReferenceView:在初始化UIDynamicAnimator的时候有一个叫做referenceView的属性，他是你的参考视图，你的子控件以及子控件的Beahavier就是参考这个视图的坐标的。</li>
+<li>UIDynamicBehavior:它可以看做是把一种物理行为封装起来的一个类，一个Behavior实例可以赋予多个动态控件的一个物理行为。</li>
 </ul>
 </li>
 </ul>
@@ -546,14 +1024,14 @@
   
 
 
-<time datetime="2015-08-22T19:47:07+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2014-07-02T22:46:29+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-si/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/07/02/uidynamicjian-dan-shi-yong/">阅读全文</a>
   
 </article>
 
@@ -564,233 +1042,17 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">百思不得姐-项目总结(三)</a></h2>
+  <h2><a href="/blog/2014/06/01/duo-dui-xiang-nei-cun-guan-li/">多对象内存管理</a></h2>
   
   <p>
-    <h3>哪些网上找不到的经验(一)</h3>
+    <h3>多对象内存管理(非ARC)</h3>
 
 
 
 
 <ul>
-<li>[UIColor colorWithPatternImage:]设置颜色跟图片一致</li>
-<li>属性后面有Appearance宏，都可以通过Appearance统一设置，例如：UITabarItem</li>
-<li>在分类中声明Property，只会声明方法声明，不会生成方法的实现和下划线属性。</li>
-<li>用imageView的initWithImage图片尺寸会与imageView一样</li>
-<li>如果navbarItem里面是文件，那么item接受事件，如果是Button，那么改button接收事件</li>
-<li>按住Option加回车，UILabel可以换行</li>
-</ul>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T19:26:47+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-san/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">百思不得姐-项目总结(二)</a></h2>
-  
-  <p>
-    <h3>小技巧(二)</h3>
-
-
-
-
-<h4>双击菜单栏回到顶部？点击屏幕顶部回到最上面？</h4>
-
-
-
-
-<ul>
-<li><p>在整个应用启动的时候在应用顶部添加一个window用于点击，然后再监听这个window的点击事件。</p></li>
-<li><p>自己自顶一个而一个类，继承window或者NSObject都行，然后定义一个window_成员变量。</p></li>
-</ul>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">window_</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ETScreenW</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">windowLevel</span> <span class="o">=</span> <span class="n">UIWindowLevelAlert</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">window_</span> <span class="nl">addGestureRecognizer</span><span class="p">:[[</span><span class="bp">UITapGestureRecognizer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">windowClick</span><span class="p">)]];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T19:08:55+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-er/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">百思不得姐-项目总结(一)</a></h2>
-  
-  <p>
-    <h3>前言</h3>
-
-
-
-
-<ul>
-<li>项目不同一般的小例子，不仅仅是知识的回顾，还是工程的封装，编程的思想，经验的总结，更多小技巧就是在项目里面摸索出来的，当然有前辈带你最好了，所以在这里感谢<a href="http://www.520it.com/index.htm">小码哥</a>的李明杰老师讲的这个小项目，我再这个项目中受益匪浅，趁现在还没忘记赶紧记下来，成为我自己的东西。</li>
-<li>这个项目是一个段子类的项目，百思不得姐，一个段子软件，具体情况自己下载来玩吧。</li>
-</ul>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T18:54:55+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/22/qqyin-le-zong-jie/">QQ音乐总结</a></h2>
-  
-  <p>
-    <h4>前言</h4>
-
-
-
-
-<ul>
-<li>对于项目，有些细节以及小技巧是网上很难表达的，也很难找到，这需要经验的积累，如果有某些有经验的开发人员教你一些小技巧，经验心得，一定要总结，这样就可以少走很多弯路，所以很感谢<a href="http://www.520it.com/index.htm">小码哥</a>的老师。</li>
-<li>多媒体有别于我们一般的接触的项目，一切都值得记录。</li>
-</ul>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T14:40:29+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/qqyin-le-zong-jie/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">浅拷贝与深拷贝</a></h2>
-  
-  <p>
-    <h4>深拷贝与浅拷贝</h4>
-
-
-
-
-<ul>
-<li>浅拷贝是指针拷贝，深拷贝是内容拷贝</li>
-<li>产生新对象的时深拷贝，不产生新对象的时浅拷贝</li>
-<li><p>浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。</p></li>
-<li><p>NString与copy(不产生新对象，浅拷贝，指针拷贝)</p></li>
+<li>在非ARC中，多个对象内存管理要注意一些问题，例如循环利用，还有就是自己手写Set方法的时候要注意一些问题</li>
+<li>指针释放 (set方法)</li>
 </ul>
 
 
@@ -802,106 +1064,19 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@&quot;00000000000&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="k">copy</span><span class="p">];</span>
-</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
-</span><span class='line'><span class="cm">/**输出结果</span>
-</span><span class='line'><span class="cm">2015-08-22 12:42:24.992 Text[1143:32063] 0x10128c7d0---------0x10128c7d0</span>
-</span><span class='line'><span class="cm">*/</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'>  <span class="n">Person</span> <span class="o">*</span><span class="n">per</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">Room</span> <span class="o">*</span><span class="n">r1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Room</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">per</span><span class="p">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">r1</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">r1</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">per</span> <span class="k">release</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 
 
-<p></p>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-22T14:15:33+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/22/qian-kao-bei-yu-shen-kao-bei/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h2>
-  
-  <p>
-    
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/21/runloopshen-du-pou-xi/">RunLoop深度剖析</a></h2>
-  
-  <p>
-    <h1>RunLoop</h1>
-
-
-
-
-<h2>前言</h2>
-
-
-
-
 <ul>
-<li><p>RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。</p></li>
-<li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，原文：<a href="http://www.cocoachina.com/ios/20150601/11970.html">http://www.cocoachina.com/ios/20150601/11970.html</a></p></li>
-<li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
+<li>由于执行完per.room = r1之后有两个指针指向同一份内存，[r1 release]后,r1所指向的内存空间被回收掉了，我们如果再像调用per.room就会报<code>message sent to deallocated instance</code>错误，所以我们要在Person里面做一些操作</li>
 </ul>
 
 
@@ -921,14 +1096,14 @@
   
 
 
-<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2014-06-01T22:39:03+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/21/runloopshen-du-pou-xi/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/06/01/duo-dui-xiang-nei-cun-guan-li/">阅读全文</a>
   
 </article>
 
@@ -939,7 +1114,140 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/">多线程(一)</a></h2>
+  <h2><a href="/blog/2014/05/31/nei-cun-guan-li-she-xi/">内存管理简单回顾</a></h2>
+  
+  <p>
+    <h3>前言</h3>
+
+
+
+
+<ul>
+<li>程序员也要有自己的成长方式，每行都要有历练，程序员也不例外，时刻保持着接受历练的准备</li>
+</ul>
+
+
+
+
+<h3>内存管理简单回顾</h3>
+
+
+
+
+<ul>
+<li>增加一个app的内存占用
+
+<ul>
+<li>创建一个OC对象</li>
+<li>定义一个变量</li>
+<li>调用一个函数或者方法</li>
+</ul>
+</li>
+<li>当app所占用的内存较多时，系统发出内存警告，这时回收一些不需要再使用的内存空间</li>
+<li>所谓内存管理，就是对内存进行管理，涉及的操作有
+
+<ul>
+<li>分配内存：比如创建一个对象，会增加内存占用</li>
+<li>清除内存：比如销毁一个对象，能减少内存占用</li>
+</ul>
+</li>
+<li>内存管理的管理范围
+
+<ul>
+<li>任何继承NSObject的对象</li>
+<li>对其他非对象类型无效(int char float double struct enum)</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-31T22:34:18+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/05/31/nei-cun-guan-li-she-xi/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2014/02/26/uinavigationri-chang-bug/">UINavigation日常Bug</a></h2>
+  
+  <p>
+    <h3>UINavigation日常Bug</h3>
+
+
+
+
+<ul>
+<li>今天整理公司项目的时候,发现一个Bug，挺有意思的，就是在你不断调用Navigation<code>- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;</code>方法的时候，发现在不断点击一个按钮来调用这个方法，在点击返回调用<code>- (UIViewController *)popViewControllerAnimated:(BOOL)animated;</code>这个方法，这是在多次点击返回不但没有返回，还多次向Navigition里面添加控制器。</li>
+</ul>
+
+
+
+
+<p><img src="/images/blog/UINavigationBug/bug_0.gif" alt="" /></p>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-26T19:59:31+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/02/26/uinavigationri-chang-bug/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2013/09/21/duo-xian-cheng-%5B%3F%5D/">多线程(一)</a></h2>
   
   <p>
     <h4>简单回顾</h4>
@@ -984,14 +1292,14 @@
   
 
 
-<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2013-09-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/21/duo-xian-cheng-%5B%3F%5D/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2013/09/21/duo-xian-cheng-%5B%3F%5D/">阅读全文</a>
   
 </article>
 
@@ -1002,16 +1310,17 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/08/20/uinavigationri-chang-bug/">UINavigation日常Bug</a></h2>
+  <h2><a href="/blog/2013/08/22/qqyin-le-zong-jie/">QQ音乐总结</a></h2>
   
   <p>
-    <h3>UINavigation日常Bug</h3>
+    <h4>前言</h4>
 
 
 
 
 <ul>
-<li>今天在做一个小Demo,发现一个Bug，挺有意思的，就是在你不断调用Navigation<code>- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;</code>方法的时候，发现在不断点击一个按钮来调用这个方法，在点击返回调用<code>- (UIViewController *)popViewControllerAnimated:(BOOL)animated;</code>这个方法，这是在多次点击返回不但没有返回，还多次向Navigition里面添加控制器。<img src="/images/blog/UINavigationBug/bug_0.gif" alt="" /></li>
+<li>对于项目，有些细节以及小技巧是网上很难表达的，也很难找到，这需要经验的积累，如果有某些有经验的开发人员教你一些小技巧，经验心得，一定要总结，这样就可以少走很多弯路.</li>
+<li>多媒体有别于我们一般的接触的项目，一切都值得记录。</li>
 </ul>
 
 
@@ -1031,14 +1340,14 @@
   
 
 
-<time datetime="2015-08-20T19:59:31+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2013-08-22T14:40:29+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
   </span>
 
   
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/20/uinavigationri-chang-bug/">阅读全文</a>
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2013/08/22/qqyin-le-zong-jie/">阅读全文</a>
   
 </article>
 

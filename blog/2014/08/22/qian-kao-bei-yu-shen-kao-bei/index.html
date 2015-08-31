@@ -1,0 +1,560 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>浅拷贝与深拷贝 - etund喔喔喔</title>
+	<meta name="author" content="etund">
+
+	
+	<meta name="description" content="浅拷贝与深拷贝 深拷贝与浅拷贝 浅拷贝是指针拷贝，深拷贝是内容拷贝
+产生新对象的时深拷贝，不产生新对象的时浅拷贝
+浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。
+NString与copy(不产生新对象， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://etund.github.com/blog/2014/08/22/qian-kao-bei-yu-shen-kao-bei/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			// $('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("a925813235z@qq.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='/images/profine/profine.jpeg' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+</div>
+
+<nav id="main-nav"><!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<html>
+<!-- <head> -->
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/buttons.css" />
+</head> -->
+<!-- <body> -->
+<div id="buttonContainer">
+    <a href="/" class="button small gray rounded">主页 | Blog</a><br/><br/>
+    <a href="/blog/archives" class="button small gray rounded">归档目录 | Archives</a><br/><br/>
+    <a href="/intruduction" class="button small gray rounded">关于我 | About</a><br/><br/>
+    <a href="/link" class="button small gray rounded">链接 | Links</a><br/><br/>
+</div>
+<!-- </body> -->
+</html>
+<style type="text/css">
+.button{
+    font:15px Calibri, Arial, sans-serif;
+
+    /* A semi-transparent text shadow */
+    text-shadow:1px 1px 0 rgba(255,255,255,0.4);
+    
+    /* Overriding the default underline styling of the links */
+    text-decoration:none !important;
+    white-space:nowrap;
+    
+    display:inline-block;
+    vertical-align:baseline;
+    position:relative;
+    cursor:pointer;
+    padding:10px 20px;
+    
+    background-repeat:no-repeat;
+
+    /* The following two rules are fallbacks, in case
+       the browser does not support multiple backgrounds. */
+
+    background-position:bottom left;
+    background-image:url('/images/button_bg.png');
+    
+    /* Multiple backgrounds version. The background images
+       are defined individually in color classes */
+    
+    background-position:bottom left, top right, 0 0, 0 0;
+    background-clip:border-box;
+    
+    /* Applying a default border raidus of 8px */
+    
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    border-radius:8px;
+    
+    /* A 1px highlight inside of the button */
+    
+    -moz-box-shadow:0 0 1px #fff inset;
+    -webkit-box-shadow:0 0 1px #fff inset;
+    box-shadow:0 0 1px #fff inset;
+    
+    /* Animating the background positions with CSS3 */
+    /* Currently works only in Safari/Chrome */
+    
+    -webkit-transition:background-position 1s;
+    -moz-transition:background-position 1s;
+    transition:background-position 1s;
+}
+
+.button:hover{
+    
+    /* The first rule is a fallback, in case the browser
+       does not support multiple backgrounds
+    */
+    
+    background-position:top left;
+    background-position:top left, bottom right, 0 0, 0 0;
+}
+
+.button:active{
+    /* Moving the button 1px to the bottom when clicked */
+    bottom:-1px;
+}
+
+/* The three buttons sizes */
+
+.button.big     { font-size:30px;}
+.button.medium  { font-size:18px;}
+.button.small   { font-size:13px;}
+
+/* A more rounded button */
+
+.button.rounded{
+    -moz-border-radius:4em;
+    -webkit-border-radius:4em;
+    border-radius:4em;
+}
+
+
+/* Defining four button colors */
+
+
+/* BlueButton */
+
+.blue.button{
+    color:#0f4b6d !important;
+    
+    border:1px solid #84acc3 !important;
+    
+    /* A fallback background color */
+    background-color: #48b5f2;
+    
+    /* Specifying a version with gradients according to */
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(89,208,244,1) 0,rgba(89,208,244,0) 100px),
+                        -moz-linear-gradient(#4fbbf7, #3faeeb);
+
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(89,208,244,1)), to(rgba(89,208,244,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
+}
+
+.blue.button:hover{
+    background-color:#63c7fe;
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(109,217,250,1) 0,rgba(109,217,250,0) 100px),
+                        -moz-linear-gradient(#63c7fe, #58bef7);
+                        
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(109,217,250,1)), to(rgba(109,217,250,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#63c7fe), to(#58bef7));
+}
+
+/* Green Button */
+
+.green.button{
+    color:#345903 !important;
+    border:1px solid #96a37b !important;    
+    background-color: #79be1e;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(162,211,30,1) 0,rgba(162,211,30,0) 100px),-moz-linear-gradient(#82cc27, #74b317);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(162,211,30,1)), to(rgba(162,211,30,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
+}
+
+.green.button:hover{
+    background-color:#89d228;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(183,229,45,1) 0,rgba(183,229,45,0) 100px),-moz-linear-gradient(#90de31, #7fc01e);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
+}
+
+/* Orange Button */
+
+.orange.button{
+    color:#693e0a !important;
+    border:1px solid #bea280 !important;    
+    background-color: #e38d27;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(232,189,45,1) 0,rgba(232,189,45,0) 100px),-moz-linear-gradient(#f1982f, #d4821f);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(232,189,45,1)), to(rgba(232,189,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f1982f), to(#d4821f));
+}
+
+.orange.button:hover{
+    background-color:#ec9732;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(241,192,52,1) 0,rgba(241,192,52,0) 100px),-moz-linear-gradient(#f9a746, #e18f2b);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(241,192,52,1)), to(rgba(241,192,52,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9a746), to(#e18f2b));
+}
+
+.gray.button{
+    color:#525252 !important;
+    border:1px solid #a5a5a5 !important;    
+    background-color: #a9adb1;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(197,199,202,1) 0,rgba(197,199,202,0) 100px),-moz-linear-gradient(#c5c7ca, #92989c);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(197,199,202,1)), to(rgba(197,199,202,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c5c7ca), to(#92989c));
+}
+
+.gray.button:hover{
+    background-color:#b6bbc0;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(202,205,208,1) 0,rgba(202,205,208,0) 100px),-moz-linear-gradient(#d1d3d6, #9fa5a9);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(202,205,208,1)), to(rgba(202,205,208,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#d1d3d6), to(#9fa5a9));
+}
+
+</style>
+
+<section class="aboutme">
+  <p>
+    点滴记载,技术,设计,生活
+  </p>
+</section>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+			<a class="email" href="mailto:a925813235z@qq.com" title="Email">Email</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/etund" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">浅拷贝与深拷贝</h1>
+	<div class="entry-content" itemprop="articleBody"><h4>深拷贝与浅拷贝</h4>
+
+<ul>
+<li>浅拷贝是指针拷贝，深拷贝是内容拷贝</li>
+<li>产生新对象的时深拷贝，不产生新对象的时浅拷贝</li>
+<li><p>浅拷贝只是对对象的简单拷贝，让几个对象公用一片内存，当内存销毁的时候，只想这片内存的额几个指针需要重新定义才可以使用，要不然会变成野指针。</p></li>
+<li><p>NString与copy(不产生新对象，浅拷贝，指针拷贝)</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@&quot;00000000000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="k">copy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:42:24.992 Text[1143:32063] 0x10128c7d0---------0x10128c7d0</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<!-- more -->
+
+
+<ul>
+<li>NString与mutableCopy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@&quot;00000000000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="n">mutableCopy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:44:39.582 Text[1183:33573] 0x1042cb7d0---------0x7f9bf401a910</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>NSMutableString与copy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithString</span><span class="p">:</span><span class="s">@&quot;-----------&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="k">copy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:47:06.886 Text[1219:34965] 0x7fa5e26107d0---------0x7fa5e260fc00</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>NSMutableString与copy(产生新对象，深拷贝，内容拷贝)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithString</span><span class="p">:</span><span class="s">@&quot;-----------&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">str_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="n">mutableCopy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%p---------%p&quot;</span><span class="p">,</span><span class="n">str</span><span class="p">,</span><span class="n">str_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/**输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 12:48:26.251 Text[1247:36136] 0x7f8450725d40---------0x7f8450738150</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>小结：
+
+<ul>
+<li>NS<em> 调用copy方法是浅拷贝，调用mutableCopy方法是深拷贝，NSMutable</em> 调用mutableCopy和copy是深拷贝。</li>
+<li>浅拷贝，在ARC中，由于自动管理内存，使用retain关键字进行引用计数，就是一种更加保险的浅拷贝，它既让几个指针共用同一片内存空间，又可以在release由于计数的存在，不会轻易的销毁内存，达到更加建档使用的目的</li>
+<li>深拷贝是指拷贝对象的具体内容，而内存地址是自主分配的，拷贝结束之后，两个对象虽然存在的值是相同的，但内存地址不一样，两个对象也互不影响，互补干涉。</li>
+</ul>
+</li>
+</ul>
+
+
+<p><img src="/images/blog/qiancopyyushenkaobei/Snip20150822_2.png" alt="" /></p>
+
+<h4>拷贝构造</h4>
+
+<ul>
+<li>在ios中不不是所有的对象原始就支持copy和mutableCopy，即使你可以调用这个方法且编译通过，但是在运行的时候会提示找不到方法copywithzone 或者 mutableCopyWithZone。所以如果其他类也想实现深拷贝或者浅拷贝的时候，要遵循NSMutableCopying或者NSCopying协议并且实现copyWithZone或者mutableCopyWithZone方法来实现深拷贝或浅拷贝。</li>
+<li>举个栗子
+
+<ul>
+<li>没有实现copying的时候对AClass的实例进行copy,编译通过,但是运行报错
+<img src="/images/blog/qiancopyyushenkaobei/Snip20150822_1.png" alt="" /></li>
+<li>接下来我们来继承NSCopying协议并且实现对应的方法</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">copyWithZone:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="nv">zone</span><span class="p">{</span>
+</span><span class='line'>    <span class="n">AClass</span> <span class="o">*</span><span class="n">aclass</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">self</span> <span class="k">class</span><span class="p">]</span> <span class="nl">allocWithZone</span><span class="p">:</span><span class="n">zone</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">aclass</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">_name</span> <span class="n">mutableCopy</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">aclass</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">_age</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">aclass</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>之后在运行之前的代码</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">AClass</span> <span class="o">*</span><span class="n">aclass</span> <span class="o">=</span> <span class="p">[[</span><span class="n">AClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">aclass</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;00000000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">aclass</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'><span class="n">AClass</span> <span class="o">*</span><span class="n">aclass_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">aclass</span> <span class="k">copy</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@--------------%@&quot;</span><span class="p">,</span><span class="n">aclass</span><span class="p">,</span><span class="n">aclass_0</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/*输出结果</span>
+</span><span class='line'><span class="cm">2015-08-22 14:07:11.509 Text[4180:74165] &lt;AClass: 0x7f91932298c0&gt;--------------&lt;AClass: 0x7f9193229770&gt;</span>
+</span><span class='line'><span class="cm">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>小结：至于NSCopying同理。</li>
+</ul>
+
+
+<h4>参考文章</h4>
+
+<ul>
+<li><a href="http://www.cocoachina.com/ios/20141113/10213.html">Objective-C中的浅拷贝和深拷贝</a></li>
+</ul>
+
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	
+    <style>
+    .flash-video{display:none;}
+</style>
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a class="jiathis_button_t163">网易微博</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_renren">人人网</a>
+<a class="jiathis_button_douban">豆瓣</a>
+
+<a href="http://www.jiathis.com/share?uid=1574434" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+    data_track_clickback:true,
+    sm:"t163,tsina,tqq,renren,douban",
+    summary:"",
+    hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js?uid=1574434" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+<!-- <br /> -->
+<!-- UY BEGIN -->
+<!-- <div id="uyan_frame"></div>
+<script type="text/javascript" id="UYScript" src="http://v1.uyan.cc/js/iframe.js?UYUserId=89581" async=""></script>
+ --><!-- UY END -->
+  	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="浅拷贝与深拷贝"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"etund"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2015
+
+    etund
+
+
+<!-- Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a> --></footer>
+		</div>
+	</div>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>

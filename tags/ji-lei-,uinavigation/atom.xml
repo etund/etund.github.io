@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 积累，UINavigation | etund喔喔喔]]></title>
   <link href="http://etund.github.com/tags/ji-lei-,uinavigation/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-24T23:37:24+08:00</updated>
+  <updated>2015-09-01T00:10:17+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -15,15 +15,17 @@
   
   <entry>
     <title type="html"><![CDATA[UINavigation日常Bug]]></title>
-    <link href="http://etund.github.com/blog/2015/08/20/uinavigationri-chang-bug/"/>
-    <updated>2015-08-20T19:59:31+08:00</updated>
-    <id>http://etund.github.com/blog/2015/08/20/uinavigationri-chang-bug</id>
+    <link href="http://etund.github.com/blog/2014/02/26/uinavigationri-chang-bug/"/>
+    <updated>2014-02-26T19:59:31+08:00</updated>
+    <id>http://etund.github.com/blog/2014/02/26/uinavigationri-chang-bug</id>
     <content type="html"><![CDATA[<h3>UINavigation日常Bug</h3>
 
 <ul>
-<li>今天在做一个小Demo,发现一个Bug，挺有意思的，就是在你不断调用Navigation<code>- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;</code>方法的时候，发现在不断点击一个按钮来调用这个方法，在点击返回调用<code>- (UIViewController *)popViewControllerAnimated:(BOOL)animated;</code>这个方法，这是在多次点击返回不但没有返回，还多次向Navigition里面添加控制器。<img src="/images/blog/UINavigationBug/bug_0.gif" alt="" /></li>
+<li>今天整理公司项目的时候,发现一个Bug，挺有意思的，就是在你不断调用Navigation<code>- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;</code>方法的时候，发现在不断点击一个按钮来调用这个方法，在点击返回调用<code>- (UIViewController *)popViewControllerAnimated:(BOOL)animated;</code>这个方法，这是在多次点击返回不但没有返回，还多次向Navigition里面添加控制器。</li>
 </ul>
 
+
+<p><img src="/images/blog/UINavigationBug/bug_0.gif" alt="" /></p>
 
 <!-- more -->
 

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: UIDynamic | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/uidynamic/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-01T00:10:17+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[UIDynamic简单使用]]></title>
+    <link href="http://etund.github.com/blog/2014/07/02/uidynamicjian-dan-shi-yong/"/>
+    <updated>2014-07-02T22:46:29+08:00</updated>
+    <id>http://etund.github.com/blog/2014/07/02/uidynamicjian-dan-shi-yong</id>
+    <content type="html"><![CDATA[<h2>UIDynamic(一)</h2>
+
+<h4>前言</h4>
+
+<ul>
+<li>最近工作之余，看了一下UIDynamic，UIDynamic是13年WWDC出得技术。其实本人一直热衷于比较有趣的动画，特别是带物理力学的动画，感觉物理力学就是动画的灵魂，一直想找几个小伙伴把物理与动画结合起来，做一下类似于物理引擎的迷你版玩玩，但是由于可支配时间不多，以至于这个夙愿未能完成，但发现UIDynamic这套UIKit自带的物理引擎也挺好玩的，所以先玩几天把，好了，废话不多说，直入正题。</li>
+</ul>
+
+
+<h4>基础</h4>
+
+<ul>
+<li>概念
+
+<ul>
+<li>UIDynamicItem:一个控件想要执行UIDynamicAnimator的动画就必须要继承这个协议。</li>
+<li>UIDynamicAnimator:Animator为动态控件提供物理相关的力学和动画，也为这些动画提供了上下文，通过添加Behavier实例来实现想要的动画效果，在以下介绍到的物理力学里面一切动画的源头都是他，也可以说，UIKit的动力学最外层的包装就是它。</li>
+<li>ReferenceView:在初始化UIDynamicAnimator的时候有一个叫做referenceView的属性，他是你的参考视图，你的子控件以及子控件的Beahavier就是参考这个视图的坐标的。</li>
+<li>UIDynamicBehavior:它可以看做是把一种物理行为封装起来的一个类，一个Behavior实例可以赋予多个动态控件的一个物理行为。</li>
+</ul>
+</li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li><p>扩展</p>
+
+<ul>
+<li>一个动态控件可以是任何遵循UIDynamicItem协议的iOS或者自定义对象，UIView和UICollectionViewLayeroutAttributes类都实现了这个协议，你可以自定义遵循这个协议的的控件来使用这个物理动画。</li>
+</ul>
+</li>
+<li><p>层次</p>
+
+<ul>
+<li>UIDynamicBehavior苹果官方提供了六种物理行为的封装,换言之，苹果官方对外只提供了六种基本的物理行为，但你可以自定义符合的物理行为，不过你自定义的这个行为必须继承UIDynamicBehavior.其层次如下</li>
+</ul>
+
+
+<p>  <img src="/images/blog/UIDynamic/Snip20150720_4.png" alt="" /></p></li>
+</ul>
+
+
+<h4>应用场景</h4>
+
+<ul>
+<li>UIGravityBehavior:重力行为，来个自由落体</li>
+</ul>
+
+
+<pre><code class="objc">        self.animator = UIDynamicAnimator(referenceView: self.view)
+        var gravity = nil
+        gravity = UIGravityBehavior(items: [littleBall])
+        self.animator.addBehavior(gravity)
+</code></pre>
+
+<pre><code>- 效果图如下
+</code></pre>
+
+<p><img src="/images/blog/UIDynamic/gavity.gif" alt="" /></p>
+
+<p><code>我们还可以通过magnitude来设置重力加速度，值得一提的是，学过物理的同学应该知道这个吧，不过苹果这里面跟现实还是有些出入的，就像我们现实中g是9.8m/s²,而在UIKit中定义了g是1000 points / second²,换言之,如果一开始我们的速度为0，那么一秒后我们的速度是1000个点/秒</code></p>
+
+<ul>
+<li>UICollisionBehavior:碰撞检测行为，是不是觉得感觉自由落体没有真实感，这个可以是我们的屏幕添加地面</li>
+</ul>
+
+
+<pre><code class="objc">        collision = nil
+        collision = UICollisionBehavior(items: viewArr)
+        collision.collisionDelegate = self
+        collision.addBoundaryWithIdentifier("path", fromPoint: CGPointMake(0, self.view.frame.height), toPoint: CGPointMake(self.view.frame.width, self.view.frame.height))
+</code></pre>
+
+<p><img src="/images/blog/UIDynamic/collision.gif" alt="" /></p>
+
+<p><code>注意:我们可以设置UICollisionBehavior的代理，来监听碰撞的行为，我们可以同translatesReferenceBoundsIntoBoundary这个属性来让我们的参考视图边界作为我们的墙壁，也可以通过这个addBoundaryWithIdentifier来设置我们的墙壁</code></p>
+
+<ul>
+<li><p>UIDynamicItemBehavior:设置每个动态控件的自身属性，提供一下属性</p>
+
+<ul>
+<li>elasticity：弹力</li>
+<li>friction：摩擦力</li>
+<li>density：密度</li>
+<li>resistance：阻力</li>
+<li>angularResistance：角阻力</li>
+<li>allowsRotation：允许旋转</li>
+</ul>
+</li>
+<li><p>我们暂且用这几个物理行为来做一个比较有趣的动画</p>
+
+<p>  <img src="/images/blog/UIDynamic/animator_0.gif" alt="" /></p>
+
+<p>  <img src="/images/blog/UIDynamic/animator.gif" alt="" /></p>
+
+<ul>
+<li><p>这个的主要思路如下</p>
+
+<ul>
+<li><p>重力行为，碰转行为，属性行为</p></li>
+<li><p>定时器不断加小球，定时器可以选择NSTimer，CADisplayLink以及GCD，前两个不怎么准确，有时还会跳过任务，所以这里我选择了GCD定时器，NSTimer和CADisplayLink底层也是调用GCD定时器的。</p></li>
+<li><p>当小球消失在屏幕中回收内存，这里我是在碰撞代理方法里面回收，也可以用KVO监听来回收内存，但系统自带的KVO好像不好使，可以试一下<code>Observable-Swift</code>这个框架，里面很好的利用了Swift的泛型来实现的。</p></li>
+</ul>
+</li>
+<li><p>核心代码如下</p></li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">    //        添加GCD定时器，比CADisplayLink和NSTimer更精确，受限制较小
+        let queue:dispatch_queue_t = dispatch_get_main_queue()
+
+        self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
+
+        let start:dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(1.0) * NSEC_PER_SEC)))
+
+        let interval:UInt64 = UInt64((UInt64(10.0) * NSEC_PER_SEC)/10)
+
+        dispatch_source_set_timer(self.timer, start, interval, 0)
+        dispatch_source_set_event_handler(self.timer, { () -&gt; Void in
+            self.addABall()
+        })
+        dispatch_resume(self.timer)
+</code></pre>
+
+<pre><code class="objc">// addBall()方法里面
+        let littleBall:LittleBall = LittleBall(frame: CGRectMake(self.view.center.x, CGFloat(arc4random_uniform(UInt32(100))) * -1, 20, 20))
+        littleBall.backgroundColor = self.randomColor();
+        littleBall.layer.cornerRadius = 10
+        self.view.addSubview(littleBall)
+
+        viewArr += [littleBall]
+
+        gravity = nil
+        gravity = UIGravityBehavior(items: viewArr)
+        gravity.magnitude = 10
+
+        collision = nil
+        collision = UICollisionBehavior(items: viewArr)
+        collision.collisionDelegate = self
+        collision.addBoundaryWithIdentifier("path", fromPoint: CGPointMake(0, self.view.frame.height), toPoint: CGPointMake(self.view.frame.width, self.view.frame.height))
+
+        itemBehavior = nil
+        itemBehavior = UIDynamicItemBehavior(items: viewArr)
+        itemBehavior.elasticity = 0.5
+
+        self.animator.removeAllBehaviors()
+        self.animator.addBehavior(gravity)
+        self.animator.addBehavior(itemBehavior)
+        self.animator.addBehavior(collision)
+</code></pre>
+
+<pre><code class="objc">//在代理方法里面
+        let view:UIView = item as! UIView
+
+            if view.frame.origin.x &lt; 0 || view.frame.origin.x &gt; self.view.frame.width{
+                let arr:NSMutableArray = NSMutableArray(array: self.viewArr)
+                view.removeFromSuperview()
+                arr.removeObject(view)
+                self.viewArr = arr as [AnyObject]
+            }
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

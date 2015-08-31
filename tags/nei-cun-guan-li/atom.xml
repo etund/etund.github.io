@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 内存管理 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/nei-cun-guan-li/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-01T00:10:17+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[内存管理简单回顾]]></title>
+    <link href="http://etund.github.com/blog/2014/05/31/nei-cun-guan-li-she-xi/"/>
+    <updated>2014-05-31T22:34:18+08:00</updated>
+    <id>http://etund.github.com/blog/2014/05/31/nei-cun-guan-li-she-xi</id>
+    <content type="html"><![CDATA[<h3>前言</h3>
+
+<ul>
+<li>程序员也要有自己的成长方式，每行都要有历练，程序员也不例外，时刻保持着接受历练的准备</li>
+</ul>
+
+
+<h3>内存管理简单回顾</h3>
+
+<ul>
+<li>增加一个app的内存占用
+
+<ul>
+<li>创建一个OC对象</li>
+<li>定义一个变量</li>
+<li>调用一个函数或者方法</li>
+</ul>
+</li>
+<li>当app所占用的内存较多时，系统发出内存警告，这时回收一些不需要再使用的内存空间</li>
+<li>所谓内存管理，就是对内存进行管理，涉及的操作有
+
+<ul>
+<li>分配内存：比如创建一个对象，会增加内存占用</li>
+<li>清除内存：比如销毁一个对象，能减少内存占用</li>
+</ul>
+</li>
+<li>内存管理的管理范围
+
+<ul>
+<li>任何继承NSObject的对象</li>
+<li>对其他非对象类型无效(int char float double struct enum)</li>
+</ul>
+</li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li><p>只有OC对象才需要进行内存管理的本质原因</p>
+
+<ul>
+<li>OC对象存放于堆里面</li>
+<li>非OC对象一般放在栈里面(栈内存会被系统自动回收)</li>
+</ul>
+</li>
+<li><p>什么是引用计数器</p>
+
+<ul>
+<li>每个OC对象都有自己的引用计数器</li>
+<li>他是一个整数</li>
+<li>从字面上，可以理解为"对象被引用的次数"</li>
+<li>也可以理解为：他表示有多少人正在使用这个对象
+<code>每个OC对象内部都有4个字节的存储空间来存放引用计数器</code></li>
+</ul>
+</li>
+<li>医用计数器的常见操作
+
+<ul>
+<li>给对象发送一条retain消息，可以是引用计数器值+1(retain方法返回对象本身)</li>
+<li>给对象发送一条release消息，可以使引用计数器-1</li>
+<li>给对象发送retainCount消息，可以获得当前引用计数器值
+<code>需要注意的是：release并不代表销毁\回收对象，仅仅是计数器-1</code></li>
+</ul>
+</li>
+<li>dealloc： 当一个对象的引用计数器为0时
+
+<ul>
+<li>这个对象即将被销毁，其占用的的内存被系统回收</li>
+<li>系统会自动给对象发送一条dealloc消息</li>
+<li>一般重写dealloc方法，就必须调用[super dealloc]，并且放在最后面调用</li>
+<li>使用注意
+
+<ul>
+<li>不能直接调用dealloc方法</li>
+<li>一旦对象被回收了，它占的内存就不再可用，坚持使用会导致程序崩溃(野指针错误)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>僵尸对象
+
+<ul>
+<li>已经被销毁的对象(不能在使用的对象)</li>
+</ul>
+</li>
+<li>野指针
+
+<ul>
+<li>指向僵尸对象(不可用内存的指针)</li>
+<li>给野指针发消息会报EXC_BAD_ACCESS错误</li>
+<li>解决方法
+
+<ul>
+<li>在对象销毁之后，将指向对象的指针变为空指针
+-空指针</li>
+</ul>
+</li>
+<li>没有指向内存空间的指针</li>
+</ul>
+</li>
+<li>@property参数
+
+<ul>
+<li>retain:release旧值，retain新值(用于OC对象)</li>
+<li>assign: 直接赋值，不做任何内存管理(默认，用户非OC对象类型)</li>
+<li><p>copy: release旧值，copy新值</p></li>
+<li><p>控制需不需要生成set，get方法</p>
+
+<ul>
+<li>readwrite : 同时生成set方法和get方法(默认)</li>
+<li>readonly : 只会生成get方法</li>
+</ul>
+</li>
+<li>多线程管理
+
+<ul>
+<li>atomic ： 性能低(默认),线程安全</li>
+<li>nonatomic : 性能高，线程不安全</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可能跟随机的区别
+
+<ul>
+<li>今天可能下雨，因为下雨跟很多因数有关，那么好像也可以说，今天下不下雨是随机的，貌似可能跟随机是一样的额，但是如果我没见过一个人，Ta的性别无非就是男跟女，那么他的性别是随机的吗，貌似不行，因为每个人得性别是确定的。</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

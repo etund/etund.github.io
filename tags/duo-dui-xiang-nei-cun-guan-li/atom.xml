@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 多对象内存管理 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/duo-dui-xiang-nei-cun-guan-li/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-01T00:10:17+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[多对象内存管理]]></title>
+    <link href="http://etund.github.com/blog/2014/06/01/duo-dui-xiang-nei-cun-guan-li/"/>
+    <updated>2014-06-01T22:39:03+08:00</updated>
+    <id>http://etund.github.com/blog/2014/06/01/duo-dui-xiang-nei-cun-guan-li</id>
+    <content type="html"><![CDATA[<h3>多对象内存管理(非ARC)</h3>
+
+<ul>
+<li>在非ARC中，多个对象内存管理要注意一些问题，例如循环利用，还有就是自己手写Set方法的时候要注意一些问题</li>
+<li><p>指针释放 (set方法)
+```objc
+       Person <em>per = [[Person alloc] init];
+      Room </em>r1 = [[Room alloc] init];
+      per.room = r1;</p>
+
+<pre><code>  [r1 release];
+  [per release];
+</code></pre>
+
+<p>```</p></li>
+<li>由于执行完per.room = r1之后有两个指针指向同一份内存，[r1 release]后,r1所指向的内存空间被回收掉了，我们如果再像调用per.room就会报<code>message sent to deallocated instance</code>错误，所以我们要在Person里面做一些操作</li>
+</ul>
+
+
+<!-- more -->
+
+
+<pre><code class="objc">- (void)setRoom:(Room *)room{
+    [room retain];
+    _room = room;
+}
+
+- (void)dealloc{
+    [_room release];
+    [super dealloc];
+}
+</code></pre>
+
+<ul>
+<li>如果当我们要把per.room 的指针指向其他Room对象的时候，例如</li>
+</ul>
+
+
+<pre><code class="objc">         Person *per = [[Person alloc] init];
+        Room *r1 = [[Room alloc] init];
+        Room *r2 = [[Room alloc] init];
+
+        NSLog(@"%zd",[r1 retainCount]);
+        per.room = r1;
+        per.room = r2;
+        NSLog(@"%zd",[r1 retainCount]);
+
+        [r1 release];
+        NSLog(@"%@",per.room);
+        [per release];
+</code></pre>
+
+<ul>
+<li>这是Room不会调用r1的dealloc方法，因为之前在set方法里面执行了一次retain操作，后面没有release操作，所以在set方法里面要先对前面的对象做一次release操作</li>
+</ul>
+
+
+<pre><code class="objc">- (void)setRoom:(Room *)room{
+    [_room release];
+    [room retain];
+    _room = room;
+}
+</code></pre>
+
+<ul>
+<li>但是，如果我们继续不断调用set方法，例如</li>
+</ul>
+
+
+<pre><code class="objc">[r1 release];
+[r2 release];
+per.room = r2;
+per.room = r2;
+</code></pre>
+
+<ul>
+<li>系统就汇报野指针错误<code>message sent to deallocated instance 0x10020a4f0</code>,这是，因为当我们执行set方法的时候，room指向的内存的计数器为1 ,我们上面做的操作是在set方法里面先做release,当person的<em>room属性跟传进来的room属性一样的时候，那么在[</em>room release]后面room指向的就成了僵尸对象，那么room就成了野指针，所以会报坏内存访问，这时要做如下操作</li>
+</ul>
+
+
+<pre><code class="objc">- (void)setRoom:(Room *)room{
+    if(_room != room){
+        [_room release];
+        _room = [room retain];
+    }
+}
+</code></pre>
+
+<p><code>总结：谁retain谁release</code></p>
+]]></content>
+  </entry>
+  
+</feed>

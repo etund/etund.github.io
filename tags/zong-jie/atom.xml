@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 总结 | etund喔喔喔]]></title>
   <link href="http://etund.github.com/tags/zong-jie/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-08-24T23:37:24+08:00</updated>
+  <updated>2015-09-01T00:10:17+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -15,16 +15,16 @@
   
   <entry>
     <title type="html"><![CDATA[RunLoop深度剖析]]></title>
-    <link href="http://etund.github.com/blog/2015/08/21/runloopshen-du-pou-xi/"/>
-    <updated>2015-08-21T22:13:01+08:00</updated>
-    <id>http://etund.github.com/blog/2015/08/21/runloopshen-du-pou-xi</id>
+    <link href="http://etund.github.com/blog/2015/06/21/runloopshen-du-pou-xi/"/>
+    <updated>2015-06-21T22:13:01+08:00</updated>
+    <id>http://etund.github.com/blog/2015/06/21/runloopshen-du-pou-xi</id>
     <content type="html"><![CDATA[<h1>RunLoop</h1>
 
 <h2>前言</h2>
 
 <ul>
 <li><p>RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。</p></li>
-<li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，原文：<a href="http://www.cocoachina.com/ios/20150601/11970.html">http://www.cocoachina.com/ios/20150601/11970.html</a></p></li>
+<li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，<a href="http://www.cocoachina.com/ios/20150601/11970.html">原文</a></p></li>
 <li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
 </ul>
 
