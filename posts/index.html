@@ -9,7 +9,14 @@
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="All Posts iOS多线程(二) iOS多线程 NSOperation NSOperation是对GCD的封装，既然封装了，那么就没有GCD那么好玩，但是同时也更加便捷的实现以下常用的功能。 创建：NSOperation是一个抽象类，不能实例化，但可以通过他的子类来使用， &hellip;">
+	<meta name="description" content="All Posts QQ粘性效果实现详细步骤 QQ粘性效果实现详细步骤 思路 新建自定义UIButton
+添加拖动手势
+计算圆的变化
+计算圆之间矩形并且填充
+回弹
+爆炸 步骤 先完成空间布局以及手势添加
+然后计算圆的变化，计算圆之间的矩形面积
+效果微调 先看看完成后的效果图 written &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -308,10 +315,183 @@
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <article>
-  <h2><a href="/blog/2015/09/05/iosduo-xian-cheng-er/">iOS多线程(二)</a></h2>
+  <h2><a href="/blog/2015/08/31/qqnian-xing-xiao-guo/">QQ粘性效果实现详细步骤</a></h2>
   
   <p>
-    <h2>iOS多线程</h2>
+    <h2>QQ粘性效果实现详细步骤</h2>
+
+
+
+
+<ul>
+<li>思路
+
+<ul>
+<li>新建自定义UIButton</li>
+<li>添加拖动手势</li>
+<li>计算圆的变化</li>
+<li>计算圆之间矩形并且填充</li>
+<li>回弹</li>
+<li>爆炸</li>
+</ul>
+</li>
+<li>步骤
+
+<ul>
+<li>先完成空间布局以及手势添加</li>
+<li>然后计算圆的变化，计算圆之间的矩形面积</li>
+<li>效果微调</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<h2>先看看完成后的效果图</h2>
+
+
+
+
+<p><img src="/images/blog/QQnianxingxiaoguo/bug_1.gif" alt="效果图" /></p>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-31T23:39:43+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/31/qqnian-xing-xiao-guo/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/25/duo-xian-cheng-%5B%3F%5D/">多线程回顾</a></h2>
+  
+  <p>
+    <h4>简单回顾</h4>
+
+
+
+
+<ul>
+<li>iOS中多线程实现有几种方案？
+
+<ul>
+<li>首先搞清楚什么是线程，什么是多线程。</li>
+<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
+<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
+<li>基本实现
+
+<ul>
+<li>pthead，纯C，手动管理生命周期</li>
+<li>NSThread，OC，面向对象。手动管理内存</li>
+<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
+<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-25T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/25/duo-xian-cheng-%5B%3F%5D/">阅读全文</a>
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h2>
+  
+  <p>
+    
+
+  </p>
+  <span class="meta">
+    written 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+    
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <article>
+  <h2><a href="/blog/2015/07/08/iosduo-xian-cheng-er/">iOS多线程(二)</a></h2>
+  
+  <p>
+    <h2>iOS多线程(二)</h2>
 
 
 
@@ -941,117 +1121,7 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
   
 
 
-<time datetime="2015-09-05T20:33:34+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/31/qqnian-xing-xiao-guo/">QQ粘性效果实现详细步骤</a></h2>
-  
-  <p>
-    <h2>QQ粘性效果实现详细步骤</h2>
-
-
-
-
-<ul>
-<li>思路
-
-<ul>
-<li>新建自定义UIButton</li>
-<li>添加拖动手势</li>
-<li>计算圆的变化</li>
-<li>计算圆之间矩形并且填充</li>
-<li>回弹</li>
-<li>爆炸</li>
-</ul>
-</li>
-<li>步骤
-
-<ul>
-<li>先完成空间布局以及手势添加</li>
-<li>然后计算圆的变化，计算圆之间的矩形面积</li>
-<li>效果微调</li>
-</ul>
-</li>
-</ul>
-
-
-
-
-<h2>先看看完成后的效果图</h2>
-
-
-
-
-<p><img src="/images/blog/QQnianxingxiaoguo/bug_1.gif" alt="效果图" /></p>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-31T23:39:43+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2015/08/31/qqnian-xing-xiao-guo/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/">原谅我这一生不羁放纵爱自由</a></h2>
-  
-  <p>
-    
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
+<time datetime="2015-07-08T20:33:34+08:00" data-updated="true" itemprop="datePublished"></time>
     
 
 
@@ -1070,7 +1140,7 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
   <h2><a href="/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/">iOS多线程(一)</a></h2>
   
   <p>
-    <h2>iOS多线程</h2>
+    <h2>iOS多线程(一)</h2>
 
 
 
@@ -2918,69 +2988,6 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 
   
     <a class="full-article-link pull-right" rel="full-article" href="/blog/2014/02/26/uinavigationri-chang-bug/">阅读全文</a>
-  
-</article>
-
-        </div>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-          <article>
-  <h2><a href="/blog/2013/09/21/duo-xian-cheng-%5B%3F%5D/">多线程(一)</a></h2>
-  
-  <p>
-    <h4>简单回顾</h4>
-
-
-
-
-<ul>
-<li>iOS中多线程实现有几种方案？
-
-<ul>
-<li>首先搞清楚什么是线程，什么是多线程。</li>
-<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
-<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
-<li>基本实现
-
-<ul>
-<li>pthead，纯C，手动管理生命周期</li>
-<li>NSThread，OC，面向对象。手动管理内存</li>
-<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
-<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time>
-    
-
-
-  </span>
-
-  
-    <a class="full-article-link pull-right" rel="full-article" href="/blog/2013/09/21/duo-xian-cheng-%5B%3F%5D/">阅读全文</a>
   
 </article>
 
