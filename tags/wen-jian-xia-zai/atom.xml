@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 文件下载 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/wen-jian-xia-zai/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-05T20:34:53+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[文件下载(二)]]></title>
+    <link href="http://etund.github.com/blog/2014/11/07/wen-jian-xia-zai-er/"/>
+    <updated>2014-11-07T17:32:40+08:00</updated>
+    <id>http://etund.github.com/blog/2014/11/07/wen-jian-xia-zai-er</id>
+    <content type="html"><![CDATA[<h3>NSURLSession多文件断点下载</h3>
+
+<ul>
+<li>上次已经完成了单文件断点下载，现在就开始实现多文件断点下载，接下来要实现单文件下载。</li>
+<li>为了方便，把之前在文件控制器文件中的下载文件抽取出来，封装成一个专门用来下载的类，假设我们调用方法，只需要存进一个url，这个工具类就会默认的把我们的下载好的文件放进cache文件里面，并且不断返回进度，于是乎我们假设封装好的方法是这样的。</li>
+</ul>
+
+
+<pre><code>NSString *remoteURL = @"http://120.25.226.186:32812/resources/videos/minion_01.mp4";
+    [ETURLDownLoadSession downloadWithURL:remoteURL complete:^(CGFloat downLoadScale) {
+        NSLog(@"-------------%f",downLoadScale);
+    }];
+</code></pre>
+
+<ul>
+<li><p>亦即是说我们只需要调用ETURLDownLoadSession的类方法就可以实现多文件断点下载了，接下来我们就要实现这个类方法了。</p></li>
+<li><p>我们在封装类里面是通过类方法类调用实例方法的，就像这样。</p></li>
+</ul>
+
+
+<pre><code>#pragma mark -  初始化方法
++ (void)downloadWithURL:(NSString *)remoteURL complete:(void (^)(CGFloat downLoadScale))complete{    
+    ETURLDownLoadSession *downLoad = [[ETURLDownLoadSession alloc] init];
+    [downLoad downloadWithURL:remoteURL complete:complete];
+}
+
+- (void)downloadWithURL:(NSString *)remoteURL complete:(void (^)(CGFloat downLoadScale))complete{
+    self.remoteURL = remoteURL;
+    [self downLoad];
+    if (complete) {
+        complete(self.downLoadScale)
+    }
+}
+</code></pre>
+
+<ul>
+<li><p>downLoadSacle是在NSURLSession代理方法中接受数据的方法里面已经接受的数据的比例。但是这里发现，只是在初始方法里面执行一次，那么我们在外头想时刻知道下载比例的变化，要怎么做呢？分析一下。</p>
+
+<ul>
+<li>首先，要时刻执行block，而block的下载比例是时刻变化的，这是使用KVO再适合不过了。</li>
+<li>然后block就不是在初始化方法里面执行了，要在监听值变化的方法里面执行，于是乎要把block前值为全局变量，首先的定义一个跟传进来block一样的block类型。</li>
+</ul>
+
+
+<pre><code class="``">  //定义block类型
+  typedef void (^scaleChangeBlock)(CGFloat downloadScale);
+  //定义block变量
+  @property (nonatomic, strong) scaleChangeBlock scaleBlock;
+</code></pre></li>
+<li><p>于是乎在- (void)downloadWithURL:(NSString *)remoteURL complete:(void (^)(CGFloat downLoadScale))complete;方法里面添加Observer来监听KVO的变化。</p></li>
+</ul>
+
+
+<pre><code>//    添加KVO
+    [self addObserver:self forKeyPath:@"downLoadScale" options:NSKeyValueObservingOptionNew context:nil];
+    self.remoteURL = remoteURL;
+    [self downLoad];
+    if (complete) {
+        self.scaleBlock = complete;
+    }
+//在监听值变化的方法里面调用block
+    //开始监听
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    self.scaleBlock(self.downLoadScale);
+}
+//最后要记得在要移除值KVO
+#pragma mark - 移除KVO
+- (void)dealloc{
+    [self removeObserver:self forKeyPath:@"downLoadScale" context:nil];
+    NSLog(@"----dealoc--");
+
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[文件断点下载(一)]]></title>
+    <link href="http://etund.github.com/blog/2014/11/05/wen-jian-xia-zai-%5B%3F%5D/"/>
+    <updated>2014-11-05T17:29:20+08:00</updated>
+    <id>http://etund.github.com/blog/2014/11/05/wen-jian-xia-zai-[?]</id>
+    <content type="html"><![CDATA[<h2>NSURLSession单文件断点下载</h2>
+
+<ul>
+<li>介绍
+
+<ul>
+<li>NSURLSession是iOS7推出的，旨在提供比NSURLConenection方便的网络需求实现方式，并取缔他，也的确做到了，在iOS9NSURLConenection已经过期了，这里介绍利用NSURLSession的代理实现断点下载。</li>
+</ul>
+</li>
+<li><p>思路</p>
+
+<ul>
+<li>初始化NSURLSession同时设置代理</li>
+<li>初始化文件IO流</li>
+<li>实现初级下载</li>
+<li>在上次下载的地方重新下载</li>
+</ul>
+
+
+<p>  <code>额外需求</code></p>
+
+<ul>
+<li>实现当用户下载完成的时候下次下载不会再发请求</li>
+</ul>
+</li>
+<li><p>在Session懒加载的设置代理</p></li>
+</ul>
+
+
+<pre><code>_session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
+</code></pre>
+
+<ul>
+<li>实现代理方法，在收到用户点击的时候在task的懒加载的时候初始化task，并且开启任务</li>
+</ul>
+
+
+<pre><code>        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://120.25.226.186:32812/resources/videos/minion_05.mp4"]];
+        _task = [self.session dataTaskWithRequest:request];
+</code></pre>
+
+<ul>
+<li>分别在接接收到数据，接收到响应，数据传输完成中座操作</li>
+</ul>
+
+
+<pre><code>//接收到响应
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+                                 didReceiveResponse:(NSURLResponse *)response
+                                  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+
+//接收到数据
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask- 
+                                     didReceiveData:(NSData *)data;
+//数据传输完成
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session NS_AVAILABLE_IOS(7_0);
+</code></pre>
+
+<ul>
+<li>在接收到响应的时候开启数据IO流，并且设置可以接受数据(NSURLSession要默认不会接受数据，要手动设置接受数据)</li>
+</ul>
+
+
+<pre><code>//    开启数据io流
+    [self.outStream open];
+//    设置接受数据
+    completionHandler(NSURLSessionResponseAllow);
+</code></pre>
+
+<ul>
+<li>在接收到数据的时候用IO流把数据写入文件</li>
+</ul>
+
+
+<pre><code>//    获取本地文件的大小
+    [self.outStream write:data.bytes maxLength:data.length];
+</code></pre>
+
+<ul>
+<li>在数据接收完毕的时候关闭流</li>
+</ul>
+
+
+<pre><code>    [self.outStream close];
+    self.outStream = nil;
+</code></pre>
+
+<ul>
+<li>现在，是可以实现数据传入，并且按暂停可以暂停，按重新开始也可以开始了。</li>
+<li>然而，当有电话打过来的时候或者用户异常退出的时候用户再进入，下载的时候，任务又重新开始了。</li>
+<li>这是我们可以这样实现，拿到当前已经下载文件的大小，而后在HTTP协议中告诉服务器，我们从当前文件大小后面的字节数开始下载，于是乎，在定义request的时候设置HTTP请求头的属性。</li>
+</ul>
+
+
+<pre><code>        NSString *range = [NSString stringWithFormat:@"bytes=%zd-",[[[NSFileManager defaultManager] attributesOfItemAtPath:ETFileSavePath error:nil][NSFileSize] integerValue]];
+        [request setValue:range forHTTPHeaderField:@"Range"];
+</code></pre>
+
+<ul>
+<li><p>现在是可以做到下载文件中用户直接退出或者来电话的时候实现断点下载。</p></li>
+<li><p>现在可以完善细节</p>
+
+<ul>
+<li>看一下我们的额外需求，实现当用户下载完成的时候下次下载不会再发请求，按照我们原来的代码，虽然说可以实现当下载完成的时候不会再继续下载，但是这是因为我们每次都会获取当前文件的大小，然后再跟服务器说我们从最后一个字节开始，然而肯定没有字节下载。</li>
+<li>额，我们想不发送请求直接可以想判断当前是否已经下载完成，于是乎可以这样，在创建发送请求的时候获取总文件大小，每次创建Task的时候判断下载的文件和总文件大小是否一致并且不为0再来判断是否要创建Task</li>
+</ul>
+
+
+<pre><code class="`">//在懒加载Task的时候
+//        获取上次存储的文件长度
+//        这样做的需求是为了不浪费用户的流量
+      NSInteger lastTimeLength = [[NSDictionary dictionaryWithContentsOfFile:ETFileLeggthSavePath][ETSavedFieldName]
+                                  integerValue];
+      if (lastTimeLength!=0 &amp;&amp; lastTimeLength==ETSavedFileSize) {
+//            NSLog(@"==========%f",(1.0 * ETSavedFileSize/lastTimeLength));
+          NSLog(@"已经下载过了");
+          return nil;
+      }
+//在接收到响应的代理方法的时候加上
+    //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+
+  //    存储本次文件的长度
+  //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+
+
+  //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+  //    存储本次文件的长度
+  [@{ETSavedFieldName:@(self.dataLength)} writeToFile:ETFileLeggthSavePath atomically:YES];
+</code></pre></li>
+<li>额，然后这样是可以在每次启动不发流量的前提下检查是否已经下载完成，但是想到，文件大小应该是一开始到最后都是一样的，那么我们为什么要每次存储呢？我们只需要存储一次就好了。</li>
+</ul>
+
+
+<pre><code> //    先取出存储的文件长度是否已经存在
+    NSInteger lastTimeLength = [[NSDictionary dictionaryWithContentsOfFile:ETFileLeggthSavePath][ETSavedFieldName] integerValue];
+    if (!lastTimeLength){
+        //    存储本次文件的长度
+        [@{ETSavedFieldName:@(self.dataLength)} writeToFile:ETFileLeggthSavePath atomically:YES];
+    } 
+</code></pre>
+
+<ul>
+<li>至此，我们实现了一些需求
+
+<ul>
+<li>可以实现文件在线断点下载</li>
+<li>可以在我们不正常退出正在下载任务的时候从新开始下载。</li>
+<li>可以实现在用户下载完的时候不发请求检查任务是否已经下载完成。</li>
+</ul>
+</li>
+<li>单文件下载基本上是可以了。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

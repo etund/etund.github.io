@@ -5,12 +5,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>个人详细信息 - etund喔喔喔</title>
+	<title>文件断点下载(一) - etund喔喔喔</title>
 	<meta name="author" content="etund">
 
 	
-	<meta name="description" content="个人详细信息 Contact me : e-mail : &#97;&#x39;&#x32;&#53;&#x38;&#x31;&#x33;&#50;&#x33;&#53;&#64;&#x71;&#x71;&#46;&#99;&#111;&#109;
-github : https://github &hellip;">
+	<meta name="description" content="文件断点下载(一) NSURLSession单文件断点下载 介绍 NSURLSession是iOS7推出的，旨在提供比NSURLConenection方便的网络需求实现方式，并取缔他，也的确做到了，在iOS9NSURLConenection已经过期了， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ github : https://github &hellip;">
 
 	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://etund.github.com/intruduction/">
+	<link rel="canonical" href="http://etund.github.com/blog/2014/11/05/wen-jian-xia-zai-%5B%3F%5D/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -294,20 +293,191 @@ github : https://github &hellip;">
 			
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">个人详细信息</h1>
-	<div class="entry-content" itemprop="articleBody"><p><strong>Contact me :</strong></p>
+	<h1 class="title" itemprop="name">文件断点下载(一)</h1>
+	<div class="entry-content" itemprop="articleBody"><h2>NSURLSession单文件断点下载</h2>
 
 <ul>
-<li><p>e-mail : <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#x61;&#x39;&#50;&#53;&#x38;&#49;&#x33;&#50;&#51;&#x35;&#64;&#x71;&#113;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#x39;&#x32;&#53;&#x38;&#x31;&#x33;&#50;&#x33;&#53;&#64;&#x71;&#x71;&#46;&#99;&#111;&#109;</a></p></li>
-<li><p>github : <a href="https://github.com/etund">https://github.com/etund</a></p></li>
-<li><p>weibo: <a href="http://weibo.com/u/3033593087" title="etund">@etund</a>
-<iframe width="350" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=350&height=550&fansRow=1&ptype=1&speed=0&skin=2&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=3033593087&verifier=91b4746f&dpc=1"></iframe></p></li>
+<li>介绍
+
+<ul>
+<li>NSURLSession是iOS7推出的，旨在提供比NSURLConenection方便的网络需求实现方式，并取缔他，也的确做到了，在iOS9NSURLConenection已经过期了，这里介绍利用NSURLSession的代理实现断点下载。</li>
+</ul>
+</li>
+<li><p>思路</p>
+
+<ul>
+<li>初始化NSURLSession同时设置代理</li>
+<li>初始化文件IO流</li>
+<li>实现初级下载</li>
+<li>在上次下载的地方重新下载</li>
 </ul>
 
 
-<!--* wechat : sgxiang
+<p>  <code>额外需求</code></p>
 
-  <img src="http://sgxiang.github.io/images/wechat.png" width=200>-->
+<ul>
+<li>实现当用户下载完成的时候下次下载不会再发请求</li>
+</ul>
+</li>
+<li><p>在Session懒加载的设置代理</p></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>_session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>实现代理方法，在收到用户点击的时候在task的懒加载的时候初始化task，并且开启任务</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://120.25.226.186:32812/resources/videos/minion_05.mp4"]];
+</span><span class='line'>    _task = [self.session dataTaskWithRequest:request];</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>分别在接接收到数据，接收到响应，数据传输完成中座操作</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//接收到响应
+</span><span class='line'>- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+</span><span class='line'>                                 didReceiveResponse:(NSURLResponse *)response
+</span><span class='line'>                                  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+</span><span class='line'>                                  
+</span><span class='line'>//接收到数据
+</span><span class='line'>- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask- 
+</span><span class='line'>                                     didReceiveData:(NSData *)data;
+</span><span class='line'>//数据传输完成
+</span><span class='line'>- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session NS_AVAILABLE_IOS(7_0);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在接收到响应的时候开启数据IO流，并且设置可以接受数据(NSURLSession要默认不会接受数据，要手动设置接受数据)</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//    开启数据io流
+</span><span class='line'>    [self.outStream open];
+</span><span class='line'>//    设置接受数据
+</span><span class='line'>    completionHandler(NSURLSessionResponseAllow);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在接收到数据的时候用IO流把数据写入文件</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//    获取本地文件的大小
+</span><span class='line'>    [self.outStream write:data.bytes maxLength:data.length];</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在数据接收完毕的时候关闭流</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[self.outStream close];
+</span><span class='line'>self.outStream = nil;</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>现在，是可以实现数据传入，并且按暂停可以暂停，按重新开始也可以开始了。</li>
+<li>然而，当有电话打过来的时候或者用户异常退出的时候用户再进入，下载的时候，任务又重新开始了。</li>
+<li>这是我们可以这样实现，拿到当前已经下载文件的大小，而后在HTTP协议中告诉服务器，我们从当前文件大小后面的字节数开始下载，于是乎，在定义request的时候设置HTTP请求头的属性。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    NSString *range = [NSString stringWithFormat:@"bytes=%zd-",[[[NSFileManager defaultManager] attributesOfItemAtPath:ETFileSavePath error:nil][NSFileSize] integerValue]];
+</span><span class='line'>    [request setValue:range forHTTPHeaderField:@"Range"];</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>现在是可以做到下载文件中用户直接退出或者来电话的时候实现断点下载。</p></li>
+<li><p>现在可以完善细节</p>
+
+<ul>
+<li>看一下我们的额外需求，实现当用户下载完成的时候下次下载不会再发请求，按照我们原来的代码，虽然说可以实现当下载完成的时候不会再继续下载，但是这是因为我们每次都会获取当前文件的大小，然后再跟服务器说我们从最后一个字节开始，然而肯定没有字节下载。</li>
+<li>额，我们想不发送请求直接可以想判断当前是否已经下载完成，于是乎可以这样，在创建发送请求的时候获取总文件大小，每次创建Task的时候判断下载的文件和总文件大小是否一致并且不为0再来判断是否要创建Task</li>
+</ul>
+
+
+<pre><code class="`">//在懒加载Task的时候
+//        获取上次存储的文件长度
+//        这样做的需求是为了不浪费用户的流量
+      NSInteger lastTimeLength = [[NSDictionary dictionaryWithContentsOfFile:ETFileLeggthSavePath][ETSavedFieldName]
+                                  integerValue];
+      if (lastTimeLength!=0 &amp;&amp; lastTimeLength==ETSavedFileSize) {
+//            NSLog(@"==========%f",(1.0 * ETSavedFileSize/lastTimeLength));
+          NSLog(@"已经下载过了");
+          return nil;
+      }
+//在接收到响应的代理方法的时候加上
+    //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+
+  //    存储本次文件的长度
+  //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+
+
+  //    记录下载数据流
+  self.dataLength = [response.allHeaderFields[@"Content-Length"] integerValue] + ETSavedFileSize;
+  //    存储本次文件的长度
+  [@{ETSavedFieldName:@(self.dataLength)} writeToFile:ETFileLeggthSavePath atomically:YES];
+</code></pre></li>
+<li>额，然后这样是可以在每次启动不发流量的前提下检查是否已经下载完成，但是想到，文件大小应该是一开始到最后都是一样的，那么我们为什么要每次存储呢？我们只需要存储一次就好了。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> //    先取出存储的文件长度是否已经存在
+</span><span class='line'>    NSInteger lastTimeLength = [[NSDictionary dictionaryWithContentsOfFile:ETFileLeggthSavePath][ETSavedFieldName] integerValue];
+</span><span class='line'>    if (!lastTimeLength){
+</span><span class='line'>        //    存储本次文件的长度
+</span><span class='line'>        [@{ETSavedFieldName:@(self.dataLength)} writeToFile:ETFileLeggthSavePath atomically:YES];
+</span><span class='line'>    } </span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>至此，我们实现了一些需求
+
+<ul>
+<li>可以实现文件在线断点下载</li>
+<li>可以在我们不正常退出正在下载任务的时候从新开始下载。</li>
+<li>可以实现在用户下载完的时候不发请求检查任务是否已经下载完成。</li>
+</ul>
+</li>
+<li>单文件下载基本上是可以了。</li>
+</ul>
 
 </div>
 
@@ -362,7 +532,7 @@ var jiathis_config={
   <section>
     <h1>Comments</h1>
     <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title="个人详细信息"></div>
+<div class="ds-thread" data-title="文件断点下载(一)"></div>
 <script type="text/javascript">
   var duoshuoQuery = {short_name:"etund"};
   (function() {

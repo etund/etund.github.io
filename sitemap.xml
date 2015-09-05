@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://etund.github.com/blog/2015/09/05/iosduo-xian-cheng-er/</loc>
+    <lastmod>2015-09-05T20:33:34+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://etund.github.com/blog/2015/08/31/qqnian-xing-xiao-guo/</loc>
     <lastmod>2015-08-31T23:39:43+08:00</lastmod>
   </url>
   <url>
     <loc>http://etund.github.com/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/</loc>
     <lastmod>2015-08-21T22:13:01+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/</loc>
+    <lastmod>2015-07-08T20:30:48+08:00</lastmod>
   </url>
   <url>
     <loc>http://etund.github.com/blog/2015/06/21/runloopshen-du-pou-xi/</loc>
@@ -31,6 +39,14 @@
   <url>
     <loc>http://etund.github.com/blog/2015/02/20/bai-si-bu-de-jie-xiang-mu-zong-jie-%5B%3F%5D/</loc>
     <lastmod>2015-02-20T18:54:55+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2014/11/07/wen-jian-xia-zai-er/</loc>
+    <lastmod>2014-11-07T17:32:40+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://etund.github.com/blog/2014/11/05/wen-jian-xia-zai-%5B%3F%5D/</loc>
+    <lastmod>2014-11-05T17:29:20+08:00</lastmod>
   </url>
   <url>
     <loc>http://etund.github.com/blog/2014/08/22/qian-kao-bei-yu-shen-kao-bei/</loc>
@@ -117,19 +133,22 @@
     <loc>http://etund.github.com/tags/runtime/</loc>
   </url>
   <url>
+    <loc>http://etund.github.com/tags/wen-jian-xia-zai/</loc>
+  </url>
+  <url>
     <loc>http://etund.github.com/tags/bai-si-bu-de-jie-,xiang-mu-zong-jie-,jing-yan/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/tags/zong-jie/</loc>
   </url>
   <url>
+    <loc>http://etund.github.com/tags/duo-xian-cheng/</loc>
+  </url>
+  <url>
     <loc>http://etund.github.com/tags/suo-xiang/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/tags/qqnian-xing-xiao-guo/</loc>
-  </url>
-  <url>
-    <loc>http://etund.github.com/blog/</loc>
   </url>
   <url>
     <loc>http://etund.github.com/blog/intruduction/index.html</loc>

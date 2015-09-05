@@ -1,0 +1,926 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>iOS多线程(二) - etund喔喔喔</title>
+	<meta name="author" content="etund">
+
+	
+	<meta name="description" content="iOS多线程(二) iOS多线程 NSOperation NSOperation是对GCD的封装，既然封装了，那么就没有GCD那么好玩，但是同时也更加便捷的实现以下常用的功能。 创建：NSOperation是一个抽象类，不能实例化，但可以通过他的子类来使用， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://etund.github.com/blog/2015/09/05/iosduo-xian-cheng-er/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			// $('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("a925813235z@qq.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='/images/profine/profine.jpeg' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+</div>
+
+<nav id="main-nav"><!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<html>
+<!-- <head> -->
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/buttons.css" />
+</head> -->
+<!-- <body> -->
+<div id="buttonContainer">
+    <a href="/" class="button small gray rounded">主页 | Blog</a><br/><br/>
+    <a href="/blog/archives" class="button small gray rounded">归档目录 | Archives</a><br/><br/>
+    <a href="/intruduction" class="button small gray rounded">关于我 | About</a><br/><br/>
+    <a href="/link" class="button small gray rounded">链接 | Links</a><br/><br/>
+</div>
+<!-- </body> -->
+</html>
+<style type="text/css">
+.button{
+    font:15px Calibri, Arial, sans-serif;
+
+    /* A semi-transparent text shadow */
+    text-shadow:1px 1px 0 rgba(255,255,255,0.4);
+    
+    /* Overriding the default underline styling of the links */
+    text-decoration:none !important;
+    white-space:nowrap;
+    
+    display:inline-block;
+    vertical-align:baseline;
+    position:relative;
+    cursor:pointer;
+    padding:10px 20px;
+    
+    background-repeat:no-repeat;
+
+    /* The following two rules are fallbacks, in case
+       the browser does not support multiple backgrounds. */
+
+    background-position:bottom left;
+    background-image:url('/images/button_bg.png');
+    
+    /* Multiple backgrounds version. The background images
+       are defined individually in color classes */
+    
+    background-position:bottom left, top right, 0 0, 0 0;
+    background-clip:border-box;
+    
+    /* Applying a default border raidus of 8px */
+    
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    border-radius:8px;
+    
+    /* A 1px highlight inside of the button */
+    
+    -moz-box-shadow:0 0 1px #fff inset;
+    -webkit-box-shadow:0 0 1px #fff inset;
+    box-shadow:0 0 1px #fff inset;
+    
+    /* Animating the background positions with CSS3 */
+    /* Currently works only in Safari/Chrome */
+    
+    -webkit-transition:background-position 1s;
+    -moz-transition:background-position 1s;
+    transition:background-position 1s;
+}
+
+.button:hover{
+    
+    /* The first rule is a fallback, in case the browser
+       does not support multiple backgrounds
+    */
+    
+    background-position:top left;
+    background-position:top left, bottom right, 0 0, 0 0;
+}
+
+.button:active{
+    /* Moving the button 1px to the bottom when clicked */
+    bottom:-1px;
+}
+
+/* The three buttons sizes */
+
+.button.big     { font-size:30px;}
+.button.medium  { font-size:18px;}
+.button.small   { font-size:13px;}
+
+/* A more rounded button */
+
+.button.rounded{
+    -moz-border-radius:4em;
+    -webkit-border-radius:4em;
+    border-radius:4em;
+}
+
+
+/* Defining four button colors */
+
+
+/* BlueButton */
+
+.blue.button{
+    color:#0f4b6d !important;
+    
+    border:1px solid #84acc3 !important;
+    
+    /* A fallback background color */
+    background-color: #48b5f2;
+    
+    /* Specifying a version with gradients according to */
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(89,208,244,1) 0,rgba(89,208,244,0) 100px),
+                        -moz-linear-gradient(#4fbbf7, #3faeeb);
+
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(89,208,244,1)), to(rgba(89,208,244,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
+}
+
+.blue.button:hover{
+    background-color:#63c7fe;
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(109,217,250,1) 0,rgba(109,217,250,0) 100px),
+                        -moz-linear-gradient(#63c7fe, #58bef7);
+                        
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(109,217,250,1)), to(rgba(109,217,250,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#63c7fe), to(#58bef7));
+}
+
+/* Green Button */
+
+.green.button{
+    color:#345903 !important;
+    border:1px solid #96a37b !important;    
+    background-color: #79be1e;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(162,211,30,1) 0,rgba(162,211,30,0) 100px),-moz-linear-gradient(#82cc27, #74b317);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(162,211,30,1)), to(rgba(162,211,30,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
+}
+
+.green.button:hover{
+    background-color:#89d228;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(183,229,45,1) 0,rgba(183,229,45,0) 100px),-moz-linear-gradient(#90de31, #7fc01e);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
+}
+
+/* Orange Button */
+
+.orange.button{
+    color:#693e0a !important;
+    border:1px solid #bea280 !important;    
+    background-color: #e38d27;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(232,189,45,1) 0,rgba(232,189,45,0) 100px),-moz-linear-gradient(#f1982f, #d4821f);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(232,189,45,1)), to(rgba(232,189,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f1982f), to(#d4821f));
+}
+
+.orange.button:hover{
+    background-color:#ec9732;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(241,192,52,1) 0,rgba(241,192,52,0) 100px),-moz-linear-gradient(#f9a746, #e18f2b);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(241,192,52,1)), to(rgba(241,192,52,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9a746), to(#e18f2b));
+}
+
+.gray.button{
+    color:#525252 !important;
+    border:1px solid #a5a5a5 !important;    
+    background-color: #a9adb1;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(197,199,202,1) 0,rgba(197,199,202,0) 100px),-moz-linear-gradient(#c5c7ca, #92989c);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(197,199,202,1)), to(rgba(197,199,202,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c5c7ca), to(#92989c));
+}
+
+.gray.button:hover{
+    background-color:#b6bbc0;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(202,205,208,1) 0,rgba(202,205,208,0) 100px),-moz-linear-gradient(#d1d3d6, #9fa5a9);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(202,205,208,1)), to(rgba(202,205,208,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#d1d3d6), to(#9fa5a9));
+}
+
+</style>
+
+<section class="aboutme">
+  <p>
+    点滴记载,技术,设计,生活
+  </p>
+</section>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+			<a class="email" href="mailto:a925813235z@qq.com" title="Email">Email</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/etund" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">iOS多线程(二)</h1>
+	<div class="entry-content" itemprop="articleBody"><h2>iOS多线程</h2>
+
+<h3>NSOperation</h3>
+
+<ul>
+<li>NSOperation是对GCD的封装，既然封装了，那么就没有GCD那么好玩，但是同时也更加便捷的实现以下常用的功能。
+
+<ul>
+<li>创建：NSOperation是一个抽象类，不能实例化，但可以通过他的子类来使用，子类分别是NSBlockOperation和NSInvocationOperation，创建方式如下。</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//NSBlockOperation</span>
+</span><span class='line'>  <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">opeaBlock</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>      <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;----1---%@-&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">])</span> <span class="p">;</span>
+</span><span class='line'>  <span class="p">}];</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">opeaBlock</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>  <span class="err">或者</span>
+</span><span class='line'><span class="c1">//    NSInvocationOperation</span>
+</span><span class='line'>  <span class="bp">NSInvocationOperation</span> <span class="o">*</span><span class="n">invoOpera</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSInvocationOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">run</span><span class="p">)</span> <span class="nl">object</span><span class="p">:</span><span class="s">@&quot;etund&quot;</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">invoOpera</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>  <span class="cm">/*运行结果</span>
+</span><span class='line'><span class="cm">   2015-07-09 14:00:18.610 Pthread-多平台[91622:193993] ----1---&lt;NSThread: 0x7fc26ae193c0&gt;{number = 1, name = main}---- etund</span>
+</span><span class='line'><span class="cm">   */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>此外，还可以通过自定义类继承NSOperation来使用NSOperation，注意在继承NSOperation的实现中把你想要执行的代码块放进- (void)main;里面就行。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">ETOperation</span><span class="p">.</span><span class="n">m</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">main</span><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;-----1-%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//调用</span>
+</span><span class='line'><span class="c1">//      自定义NSOperation</span>
+</span><span class='line'>    <span class="n">ETOpearation</span> <span class="o">*</span><span class="n">operation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ETOpearation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">operation</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>    <span class="cm">/*运行结果</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:00:18.610 Pthread-多平台[91622:193993] ----1---&lt;NSThread: 0x7fc26ae193c0&gt;{number = 1, name = main}---- etund</span>
+</span><span class='line'><span class="cm">     */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>以上线程都没有开启子线程，我们可以用NSOperationQueue与NSOperation结合使用来实现多线程操作，具体做法是把NSOperation实例加到NSOperationQueue队列中，当我们把实例加入队列中的时候，就不用主动调用start方法来开启线程了，线程会自动开启。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//    NSOperationQueue</span>
+</span><span class='line'><span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//    自定义NSOperation实例</span>
+</span><span class='line'><span class="n">ETOpearation</span> <span class="o">*</span><span class="n">operation</span> <span class="o">=</span>  <span class="p">[[</span><span class="n">ETOpearation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">opeaBlock</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;----1---%@-&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">])</span> <span class="p">;</span>
+</span><span class='line'><span class="p">}];</span>
+</span><span class='line'><span class="bp">NSInvocationOperation</span> <span class="o">*</span><span class="n">invoOpera</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSInvocationOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">run</span><span class="p">:)</span> <span class="nl">object</span><span class="p">:</span><span class="s">@&quot;etund&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">opeaBlock</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">invoOpera</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">operation</span><span class="p">];</span>
+</span><span class='line'><span class="cm">/*运行结果</span>
+</span><span class='line'><span class="cm"> 2015-07-09 14:24:26.191 Pthread-多平台[98921:212686] -----1-&lt;NSThread: 0x7ff1eab20440&gt;{number = 5, name = (null)}</span>
+</span><span class='line'><span class="cm"> 2015-07-09 14:24:26.191 Pthread-多平台[98921:212687] ----1---&lt;NSThread: 0x7ff1eab20190&gt;{number = 4, name = (null)}-</span>
+</span><span class='line'><span class="cm"> 2015-07-09 14:24:26.191 Pthread-多平台[98921:212689] ----1---&lt;NSThread: 0x7ff1eaa37910&gt;{number = 3, name = (null)}---- etund</span>
+</span><span class='line'><span class="cm"> */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&mdash;&mdash;&ndash;注意看上面运行结果，已经创建了多个线程了，至此我们成功的利用NSOperationQueue以及NSOperation实现多线程操作。</p>
+
+<ul>
+<li>我们也可以直接在队列里面添加线程代码块，就可以省去新建NSOperation实例</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//    NSOperationQueue</span>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;=======1==%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;=======2==%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;=======3==%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;=======4==%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;=======5==%@&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="cm">/*运行结果</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:20:30.289 Pthread-多平台[97728:209415] =======3==&lt;NSThread: 0x7ffdf2b90220&gt;{number = 7, name = (null)}</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:20:30.289 Pthread-多平台[97728:209432] =======1==&lt;NSThread: 0x7ffdf2b8fdc0&gt;{number = 4, name = (null)}</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:20:30.289 Pthread-多平台[97728:209416] =======5==&lt;NSThread: 0x7ffdf0e015a0&gt;{number = 5, name = (null)}</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:20:30.289 Pthread-多平台[97728:209414] =======2==&lt;NSThread: 0x7ffdf0c313e0&gt;{number = 3, name = (null)}</span>
+</span><span class='line'><span class="cm">     2015-07-09 14:20:30.289 Pthread-多平台[97728:209417] =======4==&lt;NSThread: 0x7ffdf0c314c0&gt;{number = 6, name = (null)}</span>
+</span><span class='line'><span class="cm">     */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>注意：我们可以通过maxConcurrentOperationCount来设置改队列可以开启的最大线程数，最小是1，当设置为0的时候，不执行队列中的任务，当为1的时候为GCD中的串行同步(并行同步，主队列异步，全局队列同步)一样效果。</code>
+&mdash;&mdash;&mdash;&mdash;-至此NSOperation的基本用法差不多涉及了，下面在来看看NSOperation封装带来的好处
+- 队列挂起，suspended这个属性可以控制当前线程队列的暂停和开启，在这里，已经默认你是对iOS多线程的任务有一定了解的，suspended为NO时，回执行完当前的NSOperation实例的任务，后面的任务不会在执行知道你开启</p>
+
+<ul>
+<li>队列挂起或开启如下。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'><span class="c1">//    NSOperationQueue</span>
+</span><span class='line'><span class="c1">//    挂起</span>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;0--%d-----%@---&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;1--%d-----%@---&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;2--%d-----%@---&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'> <span class="c1">//当执行一个任务的时候收到suspended为NO，就会执行完当前循环，停在当前任务。</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//完成一个点击事件就会改变suspended的状态</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesEnded:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">queue</span><span class="p">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="o">!</span><span class="nb">self</span><span class="p">.</span><span class="n">queue</span><span class="p">.</span><span class="n">isSuspended</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>队列取消，把当前队列后面的NSOperation实例全部清除掉，相对于挂起，取消是不可逆的。
+所以在系统自定义的NSOperation实例中，取消跟挂起取YES结果一样</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;----1---%@---%d-&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">],</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;----2---%@--%d--&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">],</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;----3---%@--%d--&quot;</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">],</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesEnded:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">queue</span> <span class="n">cancelAllOperations</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在自定义的NSOperation类中，当然可以把他看做一个普通的NSOperation实例对象，但是系统给NSOperation提供一个cancel属性，所以他的可控粒度更小，控制起来比较个性，要做到这一点，要在我们自定义类里面重写的main方法里面做功夫</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">ETOperation</span><span class="p">.</span><span class="n">m</span>
+</span><span class='line'><span class="c1">//这样就可以做到在任务里想停就马上停。</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">isCancelled</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%d---1-------%@&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,[</span><span class="bp">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="err">调用</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesBegan</span><span class="p">:(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:[[</span><span class="n">ETOpearation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">]];</span>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesEnded</span><span class="p">:(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">queue</span> <span class="n">cancelAllOperations</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>操作依赖，NSOperation的作用在一定程度上类似于GCD的栅栏队列(Barrier)和队列组，也就是后续步骤要在前面步骤的基础上才能执行。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+</span><span class='line'>    <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">blockOperation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">j</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">blockOperation_0</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation_0</span> <span class="nl">addDependency</span><span class="p">:</span><span class="n">blockOperation</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">blockOperation</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">blockOperation_0</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>上述代码没有什么实际意义，拿上面的一个需求吧，例如，下载图片，合成图片。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image1</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image2</span><span class="p">;</span>
+</span><span class='line'>    <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">blockOperation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">image1</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIImage</span> <span class="nl">imageWithData</span><span class="p">:[</span><span class="bp">NSData</span> <span class="nl">dataWithContentsOfURL</span><span class="p">:[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:</span><span class="s">@&quot;http://f.hiphotos.baidu.com/image/pic/item/d788d43f8794a4c2e882eb8b0df41bd5ac6e39e8.jpg&quot;</span><span class="p">]]];</span>
+</span><span class='line'>        <span class="n">image2</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIImage</span> <span class="nl">imageWithData</span><span class="p">:[</span><span class="bp">NSData</span> <span class="nl">dataWithContentsOfURL</span><span class="p">:[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:</span><span class="s">@&quot;http://h.hiphotos.baidu.com/image/pic/item/ac6eddc451da81cbd668501c5666d01608243151.jpg&quot;</span><span class="p">]]];</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">blockOperation_0</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">UIGraphicsBeginImageContextWithOptions</span><span class="p">(</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="nb">NO</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">image1</span> <span class="nl">drawAsPatternInRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">image2</span> <span class="nl">drawAsPatternInRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)];</span>
+</span><span class='line'>        <span class="bp">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="n">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">UIGraphicsEndImageContext</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">mainQueue</span><span class="p">]</span> <span class="nl">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>            <span class="nb">self</span><span class="p">.</span><span class="n">myView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}];</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation_0</span> <span class="nl">addDependency</span><span class="p">:</span><span class="n">blockOperation</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">blockOperation</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">blockOperation_0</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>操作监听，在NSOperation属性中，有一个属性@property (copy) void (^completionBlock)(void)可以在某个操作执行完成时，在执行一段代码，有很多需求也用到这个属性，例如图片的下载，如上，可以试着把上面的那段代码改写，这里就随便写一段简单的代码来展示操作监听的强大。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan:</span><span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="bp">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">__block</span> <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+</span><span class='line'>    <span class="bp">NSBlockOperation</span> <span class="o">*</span><span class="n">blockOperation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSBlockOperation</span> <span class="nl">blockOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">j</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">blockOperation</span><span class="p">.</span><span class="n">completionBlock</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation</span><span class="p">:</span><span class="n">blockOperation</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>线程通信</h3>
+
+<ul>
+<li> 线程之间的通信，线程的通信，在一个进程中，线程往往不是鼓励存在的，多个线程之间需要经常进行通信</li>
+<li><p> 线程间通信的体现</p>
+
+<ul>
+<li> 在一个线程传递数据给另外一个线程</li>
+<li> 在一个线程中执行完成任务后，转到另一个线程继续执行任务</li>
+</ul>
+</li>
+<li><p>NSThread的线程通信</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//这个方法是指在当前线程运行完后调到主线程里面运行</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//这个方法是指在当前线程运行完后调用另外一个线程里面运行</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread:</span><span class="p">(</span><span class="bp">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">wait</span>
+</span><span class='line'><span class="err">```</span>
+</span><span class='line'><span class="o">-</span> <span class="n">GCD</span><span class="err">的线程通信</span><span class="p">,</span><span class="n">GCD</span><span class="err">的线程通信十分简单，只是在代码块里面调用代码块，直接上代码吧。</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>objc
+从子线程回到主线程
+dispatch_async(
+dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    // 执行耗时的异步操作&hellip;
+      dispatch_async(dispatch_get_main_queue(), ^{
+        // 回到主线程，执行UI刷新操作
+        });
+});</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="nf">NSOperation</span><span class="err">的线程通信</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>objc
+//回到主线程
+[[NSOperationQueue mainQueue] addOperationWithBlock:^{</p>
+
+<pre><code>    }];
+</code></pre>
+
+<p>//去子线程
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    [queue addOperationWithBlock:^{</p>
+
+<pre><code>}];
+</code></pre>
+
+<p>```</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	
+    <style>
+    .flash-video{display:none;}
+</style>
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a class="jiathis_button_t163">网易微博</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_renren">人人网</a>
+<a class="jiathis_button_douban">豆瓣</a>
+
+<a href="http://www.jiathis.com/share?uid=1574434" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+    data_track_clickback:true,
+    sm:"t163,tsina,tqq,renren,douban",
+    summary:"",
+    hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js?uid=1574434" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+<!-- <br /> -->
+<!-- UY BEGIN -->
+<!-- <div id="uyan_frame"></div>
+<script type="text/javascript" id="UYScript" src="http://v1.uyan.cc/js/iframe.js?UYUserId=89581" async=""></script>
+ --><!-- UY END -->
+  	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="iOS多线程(二)"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"etund"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2015
+
+    etund
+
+
+<!-- Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a> --></footer>
+		</div>
+	</div>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>
