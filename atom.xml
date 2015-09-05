@@ -4,7 +4,7 @@
   <title><![CDATA[etund喔喔喔]]></title>
   <link href="http://etund.github.com/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-09-05T20:38:34+08:00</updated>
+  <updated>2015-09-05T20:41:21+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -1214,6 +1214,9 @@
 </ul>
 
 
+<!-- more -->
+
+
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -1784,6 +1787,9 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 </span><span class='line'><span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pthread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
 
 
 <ul>
@@ -4088,6 +4094,9 @@ __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
 </ul>
 
 
+<!-- more -->
+
+
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -4206,7 +4215,7 @@ __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
 <li>NSURLSession是iOS7推出的，旨在提供比NSURLConenection方便的网络需求实现方式，并取缔他，也的确做到了，在iOS9NSURLConenection已经过期了，这里介绍利用NSURLSession的代理实现断点下载。</li>
 </ul>
 </li>
-<li><p>思路</p>
+<li>思路
 
 <ul>
 <li>初始化NSURLSession同时设置代理</li>
@@ -4222,7 +4231,14 @@ __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
 <li>实现当用户下载完成的时候下次下载不会再发请求</li>
 </ul>
 </li>
-<li><p>在Session懒加载的设置代理</p></li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li>在Session懒加载的设置代理</li>
 </ul>
 
 

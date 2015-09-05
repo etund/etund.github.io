@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 文件下载 | etund喔喔喔]]></title>
   <link href="http://etund.github.com/tags/wen-jian-xia-zai/atom.xml" rel="self"/>
   <link href="http://etund.github.com/"/>
-  <updated>2015-09-05T20:38:34+08:00</updated>
+  <updated>2015-09-05T20:41:21+08:00</updated>
   <id>http://etund.github.com/</id>
   <author>
     <name><![CDATA[etund]]></name>
@@ -24,6 +24,9 @@
 <li>上次已经完成了单文件断点下载，现在就开始实现多文件断点下载，接下来要实现单文件下载。</li>
 <li>为了方便，把之前在文件控制器文件中的下载文件抽取出来，封装成一个专门用来下载的类，假设我们调用方法，只需要存进一个url，这个工具类就会默认的把我们的下载好的文件放进cache文件里面，并且不断返回进度，于是乎我们假设封装好的方法是这样的。</li>
 </ul>
+
+
+<!-- more -->
 
 
 <pre><code>NSString *remoteURL = @"http://120.25.226.186:32812/resources/videos/minion_01.mp4";
@@ -108,7 +111,7 @@
 <li>NSURLSession是iOS7推出的，旨在提供比NSURLConenection方便的网络需求实现方式，并取缔他，也的确做到了，在iOS9NSURLConenection已经过期了，这里介绍利用NSURLSession的代理实现断点下载。</li>
 </ul>
 </li>
-<li><p>思路</p>
+<li>思路
 
 <ul>
 <li>初始化NSURLSession同时设置代理</li>
@@ -124,7 +127,14 @@
 <li>实现当用户下载完成的时候下次下载不会再发请求</li>
 </ul>
 </li>
-<li><p>在Session懒加载的设置代理</p></li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li>在Session懒加载的设置代理</li>
 </ul>
 
 
