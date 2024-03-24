@@ -1,0 +1,861 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>etund喔喔喔</title>
+	<meta name="author" content="etund">
+
+	
+	<meta name="description" content="| Comments QQ粘性效果实现详细步骤 QQ粘性效果实现详细步骤 思路 新建自定义UIButton
+添加拖动手势
+计算圆的变化
+计算圆之间矩形并且填充
+回弹
+爆炸 步骤 先完成空间布局以及手势添加
+然后计算圆的变化，计算圆之间的矩形面积
+效果微调 先看看完成后的效果图 阅读全文 | &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="etund喔喔喔" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://etund.github.com/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			// $('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("a925813235z@qq.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+			$('.profilepic').append("<img src='/images/profine/profine.jpeg' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+</div>
+
+<nav id="main-nav"><!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<!-- <ul class="main">
+    <li><a href="/">主页 | Blog</a></li>
+    <li><a href="/blog/archives">归档目录 | Archives</a></li>
+    <li><a href="http://about.me/shashankmehta">关于我 | About</a></li>
+    <li><a href="/intruduction">关于我 | About Me</a></li>
+    <li><a href="/link">链接 | Links</a></li>
+</ul> -->
+<html>
+<!-- <head> -->
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/buttons.css" />
+</head> -->
+<!-- <body> -->
+<div id="buttonContainer">
+    <a href="/" class="button small gray rounded">主页 | Blog</a><br/><br/>
+    <a href="/blog/archives" class="button small gray rounded">归档目录 | Archives</a><br/><br/>
+    <a href="/intruduction" class="button small gray rounded">关于我 | About</a><br/><br/>
+    <a href="/link" class="button small gray rounded">链接 | Links</a><br/><br/>
+</div>
+<!-- </body> -->
+</html>
+<style type="text/css">
+.button{
+    font:15px Calibri, Arial, sans-serif;
+
+    /* A semi-transparent text shadow */
+    text-shadow:1px 1px 0 rgba(255,255,255,0.4);
+    
+    /* Overriding the default underline styling of the links */
+    text-decoration:none !important;
+    white-space:nowrap;
+    
+    display:inline-block;
+    vertical-align:baseline;
+    position:relative;
+    cursor:pointer;
+    padding:10px 20px;
+    
+    background-repeat:no-repeat;
+
+    /* The following two rules are fallbacks, in case
+       the browser does not support multiple backgrounds. */
+
+    background-position:bottom left;
+    background-image:url('/images/button_bg.png');
+    
+    /* Multiple backgrounds version. The background images
+       are defined individually in color classes */
+    
+    background-position:bottom left, top right, 0 0, 0 0;
+    background-clip:border-box;
+    
+    /* Applying a default border raidus of 8px */
+    
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    border-radius:8px;
+    
+    /* A 1px highlight inside of the button */
+    
+    -moz-box-shadow:0 0 1px #fff inset;
+    -webkit-box-shadow:0 0 1px #fff inset;
+    box-shadow:0 0 1px #fff inset;
+    
+    /* Animating the background positions with CSS3 */
+    /* Currently works only in Safari/Chrome */
+    
+    -webkit-transition:background-position 1s;
+    -moz-transition:background-position 1s;
+    transition:background-position 1s;
+}
+
+.button:hover{
+    
+    /* The first rule is a fallback, in case the browser
+       does not support multiple backgrounds
+    */
+    
+    background-position:top left;
+    background-position:top left, bottom right, 0 0, 0 0;
+}
+
+.button:active{
+    /* Moving the button 1px to the bottom when clicked */
+    bottom:-1px;
+}
+
+/* The three buttons sizes */
+
+.button.big     { font-size:30px;}
+.button.medium  { font-size:18px;}
+.button.small   { font-size:13px;}
+
+/* A more rounded button */
+
+.button.rounded{
+    -moz-border-radius:4em;
+    -webkit-border-radius:4em;
+    border-radius:4em;
+}
+
+
+/* Defining four button colors */
+
+
+/* BlueButton */
+
+.blue.button{
+    color:#0f4b6d !important;
+    
+    border:1px solid #84acc3 !important;
+    
+    /* A fallback background color */
+    background-color: #48b5f2;
+    
+    /* Specifying a version with gradients according to */
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(89,208,244,1) 0,rgba(89,208,244,0) 100px),
+                        -moz-linear-gradient(#4fbbf7, #3faeeb);
+
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(89,208,244,1)), to(rgba(89,208,244,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
+}
+
+.blue.button:hover{
+    background-color:#63c7fe;
+    
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -moz-radial-gradient(   center bottom, circle,
+                                                rgba(109,217,250,1) 0,rgba(109,217,250,0) 100px),
+                        -moz-linear-gradient(#63c7fe, #58bef7);
+                        
+    background-image:   url('/images/button_bg.png'), url('/images/button_bg.png'),
+                        -webkit-gradient(   radial, 50% 100%, 0, 50% 100%, 100,
+                                            from(rgba(109,217,250,1)), to(rgba(109,217,250,0))),
+                        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#63c7fe), to(#58bef7));
+}
+
+/* Green Button */
+
+.green.button{
+    color:#345903 !important;
+    border:1px solid #96a37b !important;    
+    background-color: #79be1e;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(162,211,30,1) 0,rgba(162,211,30,0) 100px),-moz-linear-gradient(#82cc27, #74b317);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(162,211,30,1)), to(rgba(162,211,30,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
+}
+
+.green.button:hover{
+    background-color:#89d228;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(183,229,45,1) 0,rgba(183,229,45,0) 100px),-moz-linear-gradient(#90de31, #7fc01e);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
+}
+
+/* Orange Button */
+
+.orange.button{
+    color:#693e0a !important;
+    border:1px solid #bea280 !important;    
+    background-color: #e38d27;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(232,189,45,1) 0,rgba(232,189,45,0) 100px),-moz-linear-gradient(#f1982f, #d4821f);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(232,189,45,1)), to(rgba(232,189,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f1982f), to(#d4821f));
+}
+
+.orange.button:hover{
+    background-color:#ec9732;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(241,192,52,1) 0,rgba(241,192,52,0) 100px),-moz-linear-gradient(#f9a746, #e18f2b);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(241,192,52,1)), to(rgba(241,192,52,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9a746), to(#e18f2b));
+}
+
+.gray.button{
+    color:#525252 !important;
+    border:1px solid #a5a5a5 !important;    
+    background-color: #a9adb1;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(197,199,202,1) 0,rgba(197,199,202,0) 100px),-moz-linear-gradient(#c5c7ca, #92989c);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(197,199,202,1)), to(rgba(197,199,202,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c5c7ca), to(#92989c));
+}
+
+.gray.button:hover{
+    background-color:#b6bbc0;
+    
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -moz-radial-gradient(center bottom, circle, rgba(202,205,208,1) 0,rgba(202,205,208,0) 100px),-moz-linear-gradient(#d1d3d6, #9fa5a9);
+    background-image:url('/images/button_bg.png'), url('/images/button_bg.png'), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(202,205,208,1)), to(rgba(202,205,208,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#d1d3d6), to(#9fa5a9));
+}
+
+</style>
+
+<section class="aboutme">
+  <p>
+    点滴记载,技术,设计,生活
+  </p>
+</section>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+			<a class="email" href="mailto:a925813235z@qq.com" title="Email">Email</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/etund" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-31T23:39:43+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/31/qqnian-xing-xiao-guo/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/31/qqnian-xing-xiao-guo/" itemprop="url">QQ粘性效果实现详细步骤</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>QQ粘性效果实现详细步骤</h2>
+
+<ul>
+<li>思路
+
+<ul>
+<li>新建自定义UIButton</li>
+<li>添加拖动手势</li>
+<li>计算圆的变化</li>
+<li>计算圆之间矩形并且填充</li>
+<li>回弹</li>
+<li>爆炸</li>
+</ul>
+</li>
+<li>步骤
+
+<ul>
+<li>先完成空间布局以及手势添加</li>
+<li>然后计算圆的变化，计算圆之间的矩形面积</li>
+<li>效果微调</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>先看看完成后的效果图</h2>
+
+<p><img src="/images/blog/QQnianxingxiaoguo/bug_1.gif" alt="效果图" /></p>
+
+
+		
+		<a href="/blog/2015/08/31/qqnian-xing-xiao-guo/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-25T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/25/duo-xian-cheng-%5B%3F%5D/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/25/duo-xian-cheng-%5B%3F%5D/" itemprop="url">多线程回顾</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h4>简单回顾</h4>
+
+<ul>
+<li>iOS中多线程实现有几种方案？
+
+<ul>
+<li>首先搞清楚什么是线程，什么是多线程。</li>
+<li>Mach是第一个以多线程方式处理任务的系统，因此多线程的底层实现方式是基于Mach的线程的。</li>
+<li>开发中很少用Mach级的线程，因为Mach级的的线程没有提供多线程的基本特征线程之间是独立的。</li>
+<li>基本实现
+
+<ul>
+<li>pthead，纯C，手动管理生命周期</li>
+<li>NSThread，OC，面向对象。手动管理内存</li>
+<li>GCD，纯C，自动管理生命周期，大中央调度，要理解队列与任务，任务在队列里面去除遵循先进先出的准则。</li>
+<li>NSOperation,OC，基于GCD的封装，自动管理生命周期，把操作(NSOperation)放进队列(NSOperationQueue)里面，里面的额操作会异步执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/08/25/duo-xian-cheng-%5B%3F%5D/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/08/21/yuan-liang-wo-zhe-%5B%3F%5D-sheng-bu-ji-fang-zong-ai-zi-you/" itemprop="url">原谅我这一生不羁放纵爱自由</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-08T20:33:34+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/07/08/iosduo-xian-cheng-er/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/07/08/iosduo-xian-cheng-er/" itemprop="url">iOS多线程(二)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>iOS多线程(二)</h2>
+
+<h3>NSOperation</h3>
+
+<ul>
+<li>NSOperation是对GCD的封装，既然封装了，那么就没有GCD那么好玩，但是同时也更加便捷的实现以下常用的功能。
+
+<ul>
+<li>创建：NSOperation是一个抽象类，不能实例化，但可以通过他的子类来使用，子类分别是NSBlockOperation和NSInvocationOperation，创建方式如下。</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/07/08/iosduo-xian-cheng-er/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-08T20:30:48+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/" itemprop="url">iOS多线程(一)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>iOS多线程(一)</h2>
+
+<h3>基本</h3>
+
+<ul>
+<li>实现方案：pthread - NSThread  - GCD  - NSOperation</li>
+<li>Pthread
+
+<ul>
+<li>多平台，可移植</li>
+<li>c语言，要程序员管理生命周期</li>
+<li>创建</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//这里已经开启了多线程，直接在这里调用子线程想要调用的代码</span>
+</span><span class='line'><span class="kt">void</span> <span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pramga</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;-------&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">btnClick:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+</span><span class='line'><span class="kt">pthread_t</span> <span class="n">pthread</span><span class="p">;</span>
+</span><span class='line'><span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pthread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+		
+		<a href="/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-21T22:13:01+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/06/21/runloopshen-du-pou-xi/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/06/21/runloopshen-du-pou-xi/" itemprop="url">RunLoop深度剖析</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h1>RunLoop</h1>
+
+<h2>前言</h2>
+
+<ul>
+<li><p>RunLoop是iOS/OS开发中比较基础的一个概念，在苹果开发中用在事件处理，延迟加载，屏幕刷新等功能的处理，其实抛开语言，RunLoop是一个的架构模式，也就是RunLoop不仅仅局限于iOS开发。</p></li>
+<li><p>网上有很多关于RunLoop的干货，但大多不怎么全，这位哥们的写的挺好的，挺详细的，基本上把要说的都说了，底层也研究的很细，本文基本上是转载他的，只是在它的基础上，基于我的知识水平补充了一些，<a href="http://www.cocoachina.com/ios/20150601/11970.html">原文</a></p></li>
+<li><p>官方有已经有<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html">关于RunLoop的官方文档</a>，英语的，不过网上已经有人把它翻译为中文了，大家可以去看看.</p></li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/06/21/runloopshen-du-pou-xi/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-25T19:50:39+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/02/25/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/02/25/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/" itemprop="url">百思不得姐-项目总结(五)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>功能模块实现(部分)</h3>
+
+<h5>自定义UITextView</h5>
+
+<ul>
+<li>添加内容输入框。
+
+<ul>
+<li>内嵌</li>
+<li>自定义UITextView
+
+<ul>
+<li>占位字符</li>
+</ul>
+</li>
+<li>监听textView的输入值，用于去除占位字符，不能从外面监听，这是可以在内部通过通知的方式来监听。</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/02/25/bai-si-bu-de-jie-xiang-mu-zong-jie-wu/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-24T19:47:07+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/02/24/bai-si-bu-de-jie-xiang-mu-zong-jie-si/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/02/24/bai-si-bu-de-jie-xiang-mu-zong-jie-si/" itemprop="url">百思不得姐-项目总结(四)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>哪些网上找不到的经验(二)</h3>
+
+<ul>
+<li>将约束对象翻转
+
+<ul>
+<li>这样做可以让父控件随着子控件的变化而变化，而不是子控件随着父控件的变化而变化。</li>
+</ul>
+</li>
+<li>placeholderlabel是懒加载的。
+
+<pre><code>  - 所以利用KVC设置placeholderlabel的颜色属性的时候要placeholderlabel是否为空。
+</code></pre></li>
+<li>如果我们的控件从xid加载
+
+<ul>
+<li>可以在layoutsubview方法里面设置控件尺寸</li>
+<li>排布子控件不管是从xib加载还是代码加载都不受控制，可以在layoutsubview里面设置</li>
+</ul>
+</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/02/24/bai-si-bu-de-jie-xiang-mu-zong-jie-si/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-23T19:26:47+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/02/23/bai-si-bu-de-jie-xiang-mu-zong-jie-san/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/02/23/bai-si-bu-de-jie-xiang-mu-zong-jie-san/" itemprop="url">百思不得姐-项目总结(三)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>哪些网上找不到的经验(一)</h3>
+
+<ul>
+<li>[UIColor colorWithPatternImage:]设置颜色跟图片一致</li>
+<li>属性后面有Appearance宏，都可以通过Appearance统一设置，例如：UITabarItem</li>
+<li>在分类中声明Property，只会声明方法声明，不会生成方法的实现和下划线属性。</li>
+<li>用imageView的initWithImage图片尺寸会与imageView一样</li>
+<li>如果navbarItem里面是文件，那么item接受事件，如果是Button，那么改button接收事件</li>
+<li>按住Option加回车，UILabel可以换行</li>
+</ul>
+
+
+
+		
+		<a href="/blog/2015/02/23/bai-si-bu-de-jie-xiang-mu-zong-jie-san/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-21T19:08:55+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+		
+          | <a href="/blog/2015/02/21/bai-si-bu-de-jie-xiang-mu-zong-jie-er/#comments">Comments</a>
+         
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/02/21/bai-si-bu-de-jie-xiang-mu-zong-jie-er/" itemprop="url">百思不得姐-项目总结(二)</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>小技巧(二)</h3>
+
+<h4>双击菜单栏回到顶部？点击屏幕顶部回到最上面？</h4>
+
+<ul>
+<li><p>在整个应用启动的时候在应用顶部添加一个window用于点击，然后再监听这个window的点击事件。</p></li>
+<li><p>自己自顶一个而一个类，继承window或者NSObject都行，然后定义一个window_成员变量。</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">window_</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ETScreenW</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">window_</span><span class="p">.</span><span class="n">windowLevel</span> <span class="o">=</span> <span class="n">UIWindowLevelAlert</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">window_</span> <span class="nl">addGestureRecognizer</span><span class="p">:[[</span><span class="bp">UITapGestureRecognizer</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">windowClick</span><span class="p">)]];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+		
+		<a href="/blog/2015/02/21/bai-si-bu-de-jie-xiang-mu-zong-jie-er/" class="more-link">阅读全文</a>
+	</div>
+
+</article>
+
+</div>
+<nav id="pagenavi">
+    
+    
+        <a href="2" class="next">Next</a>
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav></div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2015
+
+    etund
+
+
+<!-- Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a> --></footer>
+		</div>
+	</div>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>

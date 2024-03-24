@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: QQ粘性效果 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/qqnian-xing-xiao-guo/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-05T20:41:21+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[QQ粘性效果实现详细步骤]]></title>
+    <link href="http://etund.github.com/blog/2015/08/31/qqnian-xing-xiao-guo/"/>
+    <updated>2015-08-31T23:39:43+08:00</updated>
+    <id>http://etund.github.com/blog/2015/08/31/qqnian-xing-xiao-guo</id>
+    <content type="html"><![CDATA[<h2>QQ粘性效果实现详细步骤</h2>
+
+<ul>
+<li>思路
+
+<ul>
+<li>新建自定义UIButton</li>
+<li>添加拖动手势</li>
+<li>计算圆的变化</li>
+<li>计算圆之间矩形并且填充</li>
+<li>回弹</li>
+<li>爆炸</li>
+</ul>
+</li>
+<li>步骤
+
+<ul>
+<li>先完成空间布局以及手势添加</li>
+<li>然后计算圆的变化，计算圆之间的矩形面积</li>
+<li>效果微调</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>先看看完成后的效果图</h2>
+
+<p><img src="/images/blog/QQnianxingxiaoguo/bug_1.gif" alt="效果图" /></p>
+
+<!-- more -->
+
+
+<h2>再看看代码结构图</h2>
+
+<p><img src="/images/blog/QQnianxingxiaoguo/Snip20150625_1.png" alt="代码结构" /></p>
+
+<h3>详细步骤</h3>
+
+<ul>
+<li>在一个storyBoard里面拖一个UIButton进去，然后新建一个自定义UIBUtton类 如：ETBUtton类与之对应，好了，一切新建工作完毕，下面，我们只需要在自定义的UIButton类里面做功夫就好了，简单的代码直接上好了。</li>
+</ul>
+
+
+<pre><code class="objc">
+#import "ETStickBtn.h"
+
+@interface ETStickBtn ()
+@property (nonatomic, strong) UIView *smalCirView;
+@property (nonatomic, assign) NSInteger oriRadius;
+@property (nonatomic, strong) CAShapeLayer *shapeLayer;
+@end
+@implementation ETStickBtn
+
+#pragma mark - 懒加载数据
+- (UIView *)smalCirView{
+    if (!_smalCirView) {
+        //    新建一个圆
+        UIView *smalCirView = [[UIView alloc] init];
+//        smalCirView.frame = self.frame;
+        smalCirView.backgroundColor = self.backgroundColor;
+        [self.superview insertSubview:smalCirView belowSubview:self];
+        _smalCirView = smalCirView;
+    }
+    return _smalCirView;
+}
+
+- (CAShapeLayer *)shapeLayer{
+    if (!_shapeLayer) {
+        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+        shapeLayer.fillColor = self.backgroundColor.CGColor;
+        [self.superview.layer insertSublayer:shapeLayer below:self.layer];
+        _shapeLayer = shapeLayer;
+    }
+    return _shapeLayer;
+}
+
+#pragma mark - 系统初始化
+- (id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setUp];
+    }
+    return self;
+}
+
+- (void)awakeFromNib{
+     [self setUp];
+}
+
+#pragma mark - 初始化视图
+- (void)setUp{
+    CGFloat w = self.bounds.size.width;
+    self.layer.cornerRadius = w / 2;
+    self.smalCirView.layer.cornerRadius = w/2;
+//    记录半径
+    _oriRadius = w/2;
+    _smalCirView.frame = self.frame;
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+    [self addGestureRecognizer:pan];
+}
+</code></pre>
+
+<ul>
+<li>在添加完Pan手势后当然我们要在自定义的Pan方法里面做功夫，先看看已经实现了拖动效果的Pan代码块吧</li>
+</ul>
+
+
+<pre><code class="objc">- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+    }
+</code></pre>
+
+<ul>
+<li>就这样，可以拖动啦，接下来你想做什么呢？我就想你不断拖动大圆的过程中，小圆的半径一直减少直到为0，<code>具体思路是圆心距越大，小圆半径越小</code>，这是奉上此时的Pan代码</li>
+</ul>
+
+
+<pre><code class="objc">- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+
+//  设置小圆变化的值
+    CGFloat cirDistance = [self distanceWithPointA:self.center andPointB:self.smalCirView.center];
+    CGFloat smallCirRadius = _oriRadius - cirDistance/10.0;
+    if(smallCirRadius&lt;0) smallCirRadius = 0;
+    _smalCirView.bounds = CGRectMake(0, 0, smallCirRadius * 2, smallCirRadius * 2);
+    self.smalCirView.layer.cornerRadius = smallCirRadius;
+    }
+
+#pragma mark - 获取圆心距离
+- (CGFloat)distanceWithPointA:(CGPoint)pointA  andPointB:(CGPoint)pointB{
+    CGFloat offSetX = pointA.x - pointB.x;
+    CGFloat offSetY = pointA.y - pointB.y;
+    return sqrt(offSetX*offSetX + offSetY*offSetY);
+}
+</code></pre>
+
+<ul>
+<li>好了，现在小圆终于可以随着两圆心距的变大而变小了，之后重头戏来了，获取贝塞尔曲线路径，也就是绘制两圆之间的曲线部分<img src="/images/blog/QQnianxingxiaoguo/Snip20150625_12.png" alt="要计算的部分" />，这个也不难，只是用到初中的知识，先上个原型图(手绘)<img src="/images/blog/QQnianxingxiaoguo/Snip20150626_2.png" alt="建模" />,咳咳，由于用铅笔画的，有点模糊，那就奉上一个比较好看的吧<img src="/images/blog/QQnianxingxiaoguo/%E7%B2%98%E6%80%A7%E8%AE%A1%E7%AE%97%E5%9B%BE.png" alt="建模" />，至此，重要的点都已经计算出来的，也不难吧，把算式换成代码如下</li>
+</ul>
+
+
+<pre><code class="objc">- (UIBezierPath *)getBezierPathWithSmallCir:(UIView *)smallCir andBigCir:(UIView *)bigCir{
+//    获取最小的圆
+    if (bigCir.frame.size.width &lt; smallCir.frame.size.width) {
+        UIView *view = bigCir;
+        bigCir = smallCir;
+        smallCir = view;
+    }
+//    获取小圆的信息
+    CGFloat d = [self distanceWithPointA:smallCir.center andPointB:bigCir.center];
+    CGFloat x1 = smallCir.center.x;
+    CGFloat y1 = smallCir.center.y;
+    CGFloat r1 = smallCir.bounds.size.width/2;
+
+//    获取大圆的信息
+    CGFloat x2 = bigCir.center.x;
+    CGFloat y2 = bigCir.center.y;
+    CGFloat r2 = bigCir.bounds.size.width/2;
+
+//    获取三角函数
+    CGFloat sinA = (y2 - y1)/d;
+    CGFloat cosA = (x2 - x1)/d;
+
+//    获取矩形四个点
+    CGPoint pointA = CGPointMake(x1 - sinA*r1, y1 + cosA * r1);
+    CGPoint pointB = CGPointMake(x1 + sinA*r1, y1 - cosA * r1);
+    CGPoint pointC = CGPointMake(x2 + sinA*r2, y2 - cosA * r2);
+    CGPoint pointD = CGPointMake(x2 - sinA*r2, y2 + cosA * r2);
+
+//    获取控制点，以便画出曲线
+    CGPoint pointO = CGPointMake(pointA.x + d / 2 * cosA , pointA.y + d / 2 * sinA);
+    CGPoint pointP =  CGPointMake(pointB.x + d / 2 * cosA , pointB.y + d / 2 * sinA);
+
+//    创建路径
+    UIBezierPath *path =[UIBezierPath bezierPath];
+    [path moveToPoint:pointA];
+    [path addLineToPoint:pointB];
+    [path addQuadCurveToPoint:pointC controlPoint:pointP];
+    [path addLineToPoint:pointD];
+    [path addQuadCurveToPoint:pointA controlPoint:pointO];
+    return path;
+}
+</code></pre>
+
+<pre><code class="objc">//    获取最小的圆
+    if (bigCir.frame.size.width &lt; smallCir.frame.size.width) {
+        UIView *view = bigCir;
+        bigCir = smallCir;
+        smallCir = view;
+    }
+</code></pre>
+
+<ul>
+<li>就是这段代码，由于我作图是小圆的圆心为x1 y1,所以如果把大圆小圆的位置调过来会导致曲线面积的中间鼓起来，所以为了防止别人传错值，也不用他们那么纠结了，我代码里面自己找出最小的圆就好了，所以一定要加上这一句，然后奉上此时的pan代码</li>
+</ul>
+
+
+<pre><code class="objc">- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+
+//  设置小圆变化的值
+    CGFloat cirDistance = [self distanceWithPointA:self.center andPointB:self.smalCirView.center];
+    CGFloat smallCirRadius = _oriRadius - cirDistance/10.0;
+    if(smallCirRadius&lt;0) smallCirRadius = 0;
+    _smalCirView.bounds = CGRectMake(0, 0, smallCirRadius * 2, smallCirRadius * 2);
+    self.smalCirView.layer.cornerRadius = smallCirRadius;
+      self.shapeLayer.path = [self getBezierPathWithSmallCir:self andBigCir:self.smalCirView].CGPath;
+      }
+</code></pre>
+
+<ul>
+<li>好了接下来就是收尾部分了，只是我想做在超过一定距离后，按钮就完全被拖走了 依依不舍的走了。</li>
+</ul>
+
+
+<pre><code class="objc">#pragma mark - 自定义方法
+#pragma mark - 手势触发方法
+#define MaxDistance 90
+- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+
+//  设置小圆变化的值
+    CGFloat cirDistance = [self distanceWithPointA:self.center andPointB:self.smalCirView.center];
+    CGFloat smallCirRadius = _oriRadius - cirDistance/10.0;
+    if(smallCirRadius&lt;0) smallCirRadius = 0;
+    _smalCirView.bounds = CGRectMake(0, 0, smallCirRadius * 2, smallCirRadius * 2);
+    self.smalCirView.layer.cornerRadius = smallCirRadius;
+
+ //    画图
+    if (cirDistance &gt; MaxDistance) {
+        self.smalCirView.hidden = YES;
+        [self.shapeLayer removeFromSuperlayer];
+//        self.smalCirView  = nil;
+        self.shapeLayer = nil;
+    }else if(self.smalCirView.hidden == NO &amp;&amp; cirDistance &gt; 0){
+         self.shapeLayer.path = [self getBezierPathWithSmallCir:self andBigCir:self.smalCirView].CGPath;
+    }
+</code></pre>
+
+<ul>
+<li>最后，我们判断在限定范围内放手就回弹，超过就爆炸消失</li>
+</ul>
+
+
+<pre><code class="objc">#pragma mark - 自定义方法
+#pragma mark - 手势触发方法
+#define MaxDistance 90
+- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+
+//  设置小圆变化的值
+    CGFloat cirDistance = [self distanceWithPointA:self.center andPointB:self.smalCirView.center];
+    CGFloat smallCirRadius = _oriRadius - cirDistance/10.0;
+    if(smallCirRadius&lt;0) smallCirRadius = 0;
+    _smalCirView.bounds = CGRectMake(0, 0, smallCirRadius * 2, smallCirRadius * 2);
+    self.smalCirView.layer.cornerRadius = smallCirRadius;
+
+ //    画图
+    if (cirDistance &gt; MaxDistance) {
+        self.smalCirView.hidden = YES;
+        [self.shapeLayer removeFromSuperlayer];
+//        self.smalCirView  = nil;
+        self.shapeLayer = nil;
+    }else if(self.smalCirView.hidden == NO &amp;&amp; cirDistance &gt; 0){
+         self.shapeLayer.path = [self getBezierPathWithSmallCir:self andBigCir:self.smalCirView].CGPath;
+    }
+//    爆炸或还原
+    if(pan.state == UIGestureRecognizerStateBegan){
+        NSLog(@"%@",NSStringFromCGRect(self.frame));
+    }
+    if (pan.state == UIGestureRecognizerStateEnded) {
+        if (cirDistance &gt; MaxDistance){
+//            这是动画的爆炸效果
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+            NSLog(@"%@",NSStringFromCGRect(self.frame));
+            NSMutableArray *imageArr = [NSMutableArray array];
+            for (int i = 1 ; i &lt; 9; i++) {
+                UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%d",i]];
+                [imageArr addObject:image];
+            }
+            imageView.animationImages = imageArr;
+            imageView.animationDuration = 0.5;
+            imageView.animationRepeatCount = 1;
+            [imageView startAnimating];
+            [self addSubview:imageView];
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                移除控件
+                [self removeFromSuperview];
+            });
+        }else{
+//            回弹
+            [self.shapeLayer removeFromSuperlayer];
+            self.shapeLayer = nil;
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.2 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.center = self.smalCirView.center;
+            } completion:^(BOOL finished) {
+                self.smalCirView.hidden = NO;
+            }];
+        }
+    }
+}
+</code></pre>
+
+<ul>
+<li>这时基本上已经可以宣告完成的了，但是在爆炸效果释放的时候你会发现，爆炸效果不在我们当前的位置爆炸，而是在初始位置爆炸，这是因为苹果官方自动给StoryBoard添加了自动布局约束，这是只需要把约束渲染设为NO就好了，就是在ViewController里面加上一句代码</li>
+</ul>
+
+
+<pre><code class="objc">- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+}
+</code></pre>
+
+<ul>
+<li>最后奉上整个类的代码</li>
+</ul>
+
+
+<pre><code class="objc">
+#import "ETStickBtn.h"
+
+@interface ETStickBtn ()
+@property (nonatomic, strong) UIView *smalCirView;
+@property (nonatomic, assign) NSInteger oriRadius;
+@property (nonatomic, strong) CAShapeLayer *shapeLayer;
+@end
+@implementation ETStickBtn
+
+#pragma mark - 懒加载数据
+- (UIView *)smalCirView{
+    if (!_smalCirView) {
+        //    新建一个圆
+        UIView *smalCirView = [[UIView alloc] init];
+//        smalCirView.frame = self.frame;
+        smalCirView.backgroundColor = self.backgroundColor;
+        [self.superview insertSubview:smalCirView belowSubview:self];
+        _smalCirView = smalCirView;
+    }
+    return _smalCirView;
+}
+
+- (CAShapeLayer *)shapeLayer{
+    if (!_shapeLayer) {
+        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+        shapeLayer.fillColor = self.backgroundColor.CGColor;
+        [self.superview.layer insertSublayer:shapeLayer below:self.layer];
+        _shapeLayer = shapeLayer;
+    }
+    return _shapeLayer;
+}
+
+#pragma mark - 系统初始化
+- (id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setUp];
+    }
+    return self;
+}
+
+- (void)awakeFromNib{
+     [self setUp];
+}
+
+#pragma mark - 初始化视图
+- (void)setUp{
+    CGFloat w = self.bounds.size.width;
+    self.layer.cornerRadius = w / 2;
+    self.smalCirView.layer.cornerRadius = w/2;
+//    记录半径
+    _oriRadius = w/2;
+    _smalCirView.frame = self.frame;
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+    [self addGestureRecognizer:pan];
+}
+
+
+#pragma mark - 自定义方法
+#pragma mark - 手势触发方法
+#define MaxDistance 90
+- (void)pan:(UIPanGestureRecognizer *)pan{
+
+//  移动
+    CGPoint transPoint = [pan translationInView:self];
+    CGPoint center = self.center;
+    center.x += transPoint.x;
+    center.y += transPoint.y;
+    self.center = center;
+    [pan setTranslation:CGPointZero inView:self];
+
+//  设置小圆变化的值
+    CGFloat cirDistance = [self distanceWithPointA:self.center andPointB:self.smalCirView.center];
+    CGFloat smallCirRadius = _oriRadius - cirDistance/10.0;
+    if(smallCirRadius&lt;0) smallCirRadius = 0;
+    _smalCirView.bounds = CGRectMake(0, 0, smallCirRadius * 2, smallCirRadius * 2);
+    self.smalCirView.layer.cornerRadius = smallCirRadius;
+
+ //    画图
+    if (cirDistance &gt; MaxDistance) {
+        self.smalCirView.hidden = YES;
+        [self.shapeLayer removeFromSuperlayer];
+//        self.smalCirView  = nil;
+        self.shapeLayer = nil;
+    }else if(self.smalCirView.hidden == NO &amp;&amp; cirDistance &gt; 0){
+         self.shapeLayer.path = [self getBezierPathWithSmallCir:self andBigCir:self.smalCirView].CGPath;
+    }
+//    爆炸或还原
+    if(pan.state == UIGestureRecognizerStateBegan){
+        NSLog(@"%@",NSStringFromCGRect(self.frame));
+    }
+    if (pan.state == UIGestureRecognizerStateEnded) {
+        if (cirDistance &gt; MaxDistance){
+//            这是动画的爆炸效果
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+            NSLog(@"%@",NSStringFromCGRect(self.frame));
+            NSMutableArray *imageArr = [NSMutableArray array];
+            for (int i = 1 ; i &lt; 9; i++) {
+                UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%d",i]];
+                [imageArr addObject:image];
+            }
+            imageView.animationImages = imageArr;
+            imageView.animationDuration = 0.5;
+            imageView.animationRepeatCount = 1;
+            [imageView startAnimating];
+            [self addSubview:imageView];
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                移除控件
+                [self removeFromSuperview];
+            });
+        }else{
+//            回弹
+            [self.shapeLayer removeFromSuperlayer];
+            self.shapeLayer = nil;
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.2 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.center = self.smalCirView.center;
+            } completion:^(BOOL finished) {
+                self.smalCirView.hidden = NO;
+            }];
+        }
+    }
+}
+
+#pragma mark - 获取圆心距离
+- (CGFloat)distanceWithPointA:(CGPoint)pointA  andPointB:(CGPoint)pointB{
+    CGFloat offSetX = pointA.x - pointB.x;
+    CGFloat offSetY = pointA.y - pointB.y;
+    return sqrt(offSetX*offSetX + offSetY*offSetY);
+}
+
+#pragma mark - 获取贝塞尔曲线
+- (UIBezierPath *)getBezierPathWithSmallCir:(UIView *)smallCir andBigCir:(UIView *)bigCir{
+//    获取最小的圆
+    if (bigCir.frame.size.width &lt; smallCir.frame.size.width) {
+        UIView *view = bigCir;
+        bigCir = smallCir;
+        smallCir = view;
+    }
+//    获取小圆的信息
+    CGFloat d = [self distanceWithPointA:smallCir.center andPointB:bigCir.center];
+    CGFloat x1 = smallCir.center.x;
+    CGFloat y1 = smallCir.center.y;
+    CGFloat r1 = smallCir.bounds.size.width/2;
+
+//    获取大圆的信息
+    CGFloat x2 = bigCir.center.x;
+    CGFloat y2 = bigCir.center.y;
+    CGFloat r2 = bigCir.bounds.size.width/2;
+
+//    获取三角函数
+    CGFloat sinA = (y2 - y1)/d;
+    CGFloat cosA = (x2 - x1)/d;
+
+//    获取矩形四个点
+    CGPoint pointA = CGPointMake(x1 - sinA*r1, y1 + cosA * r1);
+    CGPoint pointB = CGPointMake(x1 + sinA*r1, y1 - cosA * r1);
+    CGPoint pointC = CGPointMake(x2 + sinA*r2, y2 - cosA * r2);
+    CGPoint pointD = CGPointMake(x2 - sinA*r2, y2 + cosA * r2);
+
+//    获取控制点，以便画出曲线
+    CGPoint pointO = CGPointMake(pointA.x + d / 2 * cosA , pointA.y + d / 2 * sinA);
+    CGPoint pointP =  CGPointMake(pointB.x + d / 2 * cosA , pointB.y + d / 2 * sinA);
+
+//    创建路径
+    UIBezierPath *path =[UIBezierPath bezierPath];
+    [path moveToPoint:pointA];
+    [path addLineToPoint:pointB];
+    [path addQuadCurveToPoint:pointC controlPoint:pointP];
+    [path addLineToPoint:pointD];
+    [path addQuadCurveToPoint:pointA controlPoint:pointO];
+    return path;
+}
+@end
+</code></pre>
+
+<p>好了，收工</p>
+
+<ul>
+<li>后期更新(如果想获得呼吸效果，只需要加上一个帧动画即可)，上面的完整代码里面没有动画，如果想添加动画，请看下面
+
+<ul>
+<li>动画代码</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">#pragma mark - 添加动画
+-(void)AddAniamtionLikeGameCenterBubble{
+
+    CAKeyframeAnimation *pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    pathAnimation.calculationMode = kCAAnimationPaced;
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.repeatCount = INFINITY;
+    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.duration = 5.0;
+
+
+    CGMutablePathRef curvedPath = CGPathCreateMutable();
+    CGRect circleContainer = CGRectInset(self.frame, self.bounds.size.width / 2 - 3, self.bounds.size.width / 2 - 3);
+    CGPathAddEllipseInRect(curvedPath, NULL, circleContainer);
+
+    pathAnimation.path = curvedPath;
+    CGPathRelease(curvedPath);
+    [self.layer addAnimation:pathAnimation forKey:@"myCircleAnimation"];
+
+
+    CAKeyframeAnimation *scaleX = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.x"];
+    scaleX.duration = 1;
+    scaleX.values = @[@1.0, @1.1, @1.0];
+    scaleX.keyTimes = @[@0.0, @0.5, @1.0];
+    scaleX.repeatCount = INFINITY;
+    scaleX.autoreverses = YES;
+
+    scaleX.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [self.layer addAnimation:scaleX forKey:@"scaleXAnimation"];
+
+
+    CAKeyframeAnimation *scaleY = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale.y"];
+    scaleY.duration = 1.5;
+    scaleY.values = @[@1.0, @1.1, @1.0];
+    scaleY.keyTimes = @[@0.0, @0.5, @1.0];
+    scaleY.repeatCount = INFINITY;
+    scaleY.autoreverses = YES;
+    scaleX.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [self.layer addAnimation:scaleY forKey:@"scaleYAnimation"];
+}
+
+#pragma mark - 移除动画
+-(void)RemoveAniamtionLikeGameCenterBubble{
+    [self.layer removeAllAnimations];
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

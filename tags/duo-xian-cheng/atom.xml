@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 多线程 | etund喔喔喔]]></title>
+  <link href="http://etund.github.com/tags/duo-xian-cheng/atom.xml" rel="self"/>
+  <link href="http://etund.github.com/"/>
+  <updated>2015-09-05T20:41:21+08:00</updated>
+  <id>http://etund.github.com/</id>
+  <author>
+    <name><![CDATA[etund]]></name>
+    <email><![CDATA[a925813235z@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS多线程(一)]]></title>
+    <link href="http://etund.github.com/blog/2015/07/08/iosduo-xian-cheng-%5B%3F%5D/"/>
+    <updated>2015-07-08T20:30:48+08:00</updated>
+    <id>http://etund.github.com/blog/2015/07/08/iosduo-xian-cheng-[?]</id>
+    <content type="html"><![CDATA[<h2>iOS多线程(一)</h2>
+
+<h3>基本</h3>
+
+<ul>
+<li>实现方案：pthread - NSThread  - GCD  - NSOperation</li>
+<li>Pthread
+
+<ul>
+<li>多平台，可移植</li>
+<li>c语言，要程序员管理生命周期</li>
+<li>创建</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">    //这里已经开启了多线程，直接在这里调用子线程想要调用的代码
+    void * run(void *pramga) {
+    NSLog(@"-------");
+    return NULL;
+}
+
+    - (IBAction)btnClick:(id)sender {
+    pthread_t pthread;
+    pthread_create(&amp;pthread, NULL, run, NULL);
+}
+</code></pre>
+
+<!-- more -->
+
+
+<ul>
+<li>NSThread
+
+<ul>
+<li>面向对象，简单实用</li>
+<li>创建</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">
+    //隐式创建并启动线程
+[NSThread detachNewThreadSelector:@selector(threadRun:) toTarget:self withObject:@"etund"];
+或者
+//创建线程并且启动线程
+[self performSelectorInBackground:@selector(threadRun:) withObject:@"etund"];
+或者
+上述两个优点是可以快速的创建并启动线程，方便快捷，但是不能对线程进行多余属性的设置，而下面一种方法就可以对线程实例属性的设置，但是要记得要手动开启线程。
+   NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(threadRun:) object:@"etund"];
+    [thread start];
+</code></pre>
+
+<h3>GCD</h3>
+
+<ul>
+<li>听说全称是叫“牛逼的中枢调度器”，但是我还是喜欢叫大中央调度</li>
+<li>纯C语言，有很多强大的函数</li>
+<li>优势：(纯属板书)
+
+<ul>
+<li>GCD是苹果公司为多核的并行运算提出的解决方案</li>
+<li>GCD会自动利用更多的CPU内核（比如双核、四核）</li>
+<li>GCD会自动管理线程的生命周期（创建线程、调度任务、销毁线程）</li>
+<li>程序员只需要告诉GCD想要执行什么任务，不需要编写任何线程管理代码</li>
+</ul>
+</li>
+<li>核心：清楚什么是任务，队列
+
+<ul>
+<li>串行与并行不能决定是否要开启新县城</li>
+<li>并行表明具有创建新线程的能力，但不一定创建新线程</li>
+</ul>
+</li>
+<li>常用GCD内容
+
+<ul>
+<li>串行同步（并行同步/全局队列同步）,由于串行同步，并行同步，以及全局队列同步都是不创建线程按顺序执行，所以归为一类来讲。（不开任何子线程，在主线程中执行）</li>
+</ul>
+</li>
+</ul>
+
+
+<pre><code class="objc">     //串行
+    dispatch_queue_t queue = dispatch_queue_create("etund", DISPATCH_QUEUE_SERIAL);
+//并行
+//dispatch_queue_t queue = dispatch_queue_create("etund", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_sync(queue, ^{
+
+        NSLog(@"%@---1",[NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"%@----2",[NSThread currentThread]);
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"%@----3",[NSThread currentThread]);
+    });
+    运行结果
+     2015-07-08 19:09:39.611 Pthread-多平台[63090:302902] &lt;NSThread: 0x7fc79142c1d0&gt;{number = 1, name = main}---1
+     2015-07-08 19:09:39.612 Pthread-多平台[63090:302902] &lt;NSThread: 0x7fc79142c1d0&gt;{number = 1, name = main}----2
+     2015-07-08 19:09:39.612 Pthread-多平台[63090:302902] &lt;NSThread: 0x7fc79142c1d0&gt;{number = 1, name = main}----3
+</code></pre>
+
+<ul>
+<li> 串行异步 （开启一个子线程，在子线程中执行）</li>
+</ul>
+
+
+<pre><code class="objc">    dispatch_queue_t queue = dispatch_queue_create("etund", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        NSLog(@"%@---1",[NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"%@---2",[NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"%@---3",[NSThread currentThread]);
+    });
+
+    /*运行结果
+     2015-07-08 19:25:37.811 Pthread-多平台[68041:316565] &lt;NSThread: 0x7fb35850fe30&gt;{number = 3, name = (null)}---1
+     2015-07-08 19:25:37.811 Pthread-多平台[68041:316565] &lt;NSThread: 0x7fb35850fe30&gt;{number = 3, name = (null)}---2
+     2015-07-08 19:25:37.811 Pthread-多平台[68041:316565] &lt;NSThread: 0x7fb35850fe30&gt;{number = 3, name = (null)}---3
+     */
+</code></pre>
+
+<ul>
+<li> 并行异步（全局队列异步）虽然线程的执行顺序不一样，但是任务从队列里面拿出来放进线程的顺序是按照先进先出的这是根本，基础。（有几个任务，开启几个子线程，在各自的子线程中执行）</li>
+</ul>
+
+
+<pre><code class="objc">    dispatch_queue_t queue = dispatch_queue_create("etund", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_async(queue, ^{
+        NSLog(@"%@---1",[NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"%@---2",[NSThread currentThread]);
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"%@---3",[NSThread currentThread]);
+    });
+//   虽然线程的执行顺序不一样，但是任务从队列里面拿出来放进线程的顺序是按照先进先出
+    /*
+     *2015-07-08 19:27:46.060 Pthread-多平台[68694:318231] &lt;NSThread: 0x7f9a89c126b0&gt;{number = 4, name = (null)}---2
+     2015-07-08 19:27:46.060 Pthread-多平台[68694:318230] &lt;NSThread: 0x7f9a8c211400&gt;{number = 5, name = (null)}---3
+     2015-07-08 19:27:46.060 Pthread-多平台[68694:318171] &lt;NSThread: 0x7f9a89f9efe0&gt;{number = 3, name = (null)}---1
+     */
+</code></pre>
+
+<ul>
+<li> 主队列异步,不开任何子线程，在主线程中运行，也对应了那句话，异步队列只是具有开启子线程的能力，但是不一定开子线程。</li>
+</ul>
+
+
+<pre><code class="objc">    //    主队列异步(不开线程)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@---1",[NSThread currentThread]);
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@---2",[NSThread currentThread]);
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@---3",[NSThread currentThread]); ;
+    });
+    /*
+     2015-07-08 19:34:25.440 Pthread-多平台[70710:322816] &lt;NSThread: 0x7fe0d1418200&gt;{number = 1, name = main}---1
+     2015-07-08 19:34:25.440 Pthread-多平台[70710:322816] &lt;NSThread: 0x7fe0d1418200&gt;{number = 1, name = main}---2
+     2015-07-08 19:34:25.440 Pthread-多平台[70710:322816] &lt;NSThread: 0x7fe0d1418200&gt;{number = 1, name = main}---3
+     */
+</code></pre>
+
+<ul>
+<li> 主队列同步</li>
+</ul>
+
+
+<pre><code class="objc">        - (void)gcdTest_2_4{
+        NSLog(@"=-=-=-");
+        //    主队列同步(阻塞)
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"%@---1",[NSThread currentThread]);
+        });
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"%@---2",[NSThread currentThread]);
+        });
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"%@---3",[NSThread currentThread]);
+        });
+        NSLog(@"=-=-=-");
+    }
+</code></pre>
+
+<hr />
+
+<p>至此，基本GCD队列已经被差不多就这样了，下面来一下有趣的用法
+    - GCD队列组，有这么一个需求，你的一个步骤要在其他步骤完成之后才能完成，也就是后续步骤要依赖于前期步骤，这是GCD队列组以及Barrier队列(栅栏队列)不失为一个好办法，</p>
+
+<pre><code class="objc">//GCD队列组方式
+        //    (线程组)(线程通讯)
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t group = dispatch_group_create();
+    //    加载图片1
+    dispatch_group_async(group, queue, ^{
+        NSURL *url = [NSURL URLWithString:@"http://f.hiphotos.baidu.com/image/pic/item/d788d43f8794a4c2e882eb8b0df41bd5ac6e39e8.jpg"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        self.image1 = [UIImage imageWithData:data];
+    });
+    //    加载图片2
+    dispatch_group_async(group, queue, ^{
+        NSURL *url = [NSURL URLWithString:@"http://h.hiphotos.baidu.com/image/pic/item/ac6eddc451da81cbd668501c5666d01608243151.jpg"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        self.image2 = [UIImage imageWithData:data];
+    });
+
+    //    合并
+    dispatch_group_notify(group, queue, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(100, 100), NO, 0);
+        [self.image1 drawAsPatternInRect:CGRectMake(0, 0, 50, 100)];
+        [self.image2 drawAsPatternInRect:CGRectMake(50, 0, 50, 100)];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        //GCD线程之间的通信
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.myView.image = image;
+        });
+        });
+
+//栅栏dispatch_barrier方式
+        dispatch_queue_t queue = dispatch_queue_create("etund", DISPATCH_QUEUE_CONCURRENT);//创建多个线程
+    dispatch_async(queue, ^{
+        NSURL *url = [NSURL URLWithString:@"http://f.hiphotos.baidu.com/image/pic/item/d788d43f8794a4c2e882eb8b0df41bd5ac6e39e8.jpg"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        self.image1 = [UIImage imageWithData:data];
+    });
+    dispatch_async(queue, ^{
+        NSURL *url = [NSURL URLWithString:@"http://h.hiphotos.baidu.com/image/pic/item/ac6eddc451da81cbd668501c5666d01608243151.jpg"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        self.image2 = [UIImage imageWithData:data];
+    });
+
+    dispatch_barrier_async(queue, ^{
+
+    });
+
+    dispatch_async(queue, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(100, 100), NO, 0);
+        [self.image1 drawAsPatternInRect:CGRectMake(0, 0, 50, 100)];
+        [self.image2 drawAsPatternInRect:CGRectMake(50, 0, 50, 100)];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.myView.image = image;
+        });
+    });
+</code></pre>
+
+<ul>
+<li>延迟加载</li>
+</ul>
+
+
+<pre><code class="objc"> dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    // 2秒后异步执行这里的代码...
+});
+</code></pre>
+
+<ul>
+<li>快速迭代，当我们不需要注重迭代的顺序，只需要快速获得子元素的时候，GCD的快速迭代为你提供了途径</li>
+</ul>
+
+
+<pre><code class="objc">    //    (快速迭代)
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_apply(self.view.subviews.count, queue, ^(size_t index) {
+        id obj = self.view.subviews[index];
+        NSLog(@"---%zu---%@",index,obj);
+    });
+    /*
+    2015-07-08 22:26:39.851 Pthread-多平台[972:17366] ---0---&lt;_UILayoutGuide: 0x7fd86b644e00; frame = (0 0; 0 20); hidden = YES; layer = &lt;CALayer: 0x7fd86b643ab0&gt;&gt;
+    2015-07-08 22:26:39.851 Pthread-多平台[972:17444] ---2---&lt;UIImageView: 0x7fd86b645ba0; frame = (100 100; 100 100); clipsToBounds = YES; userInteractionEnabled = NO; layer = &lt;CALayer: 0x7fd86b643290&gt;&gt;
+    2015-07-08 22:26:39.851 Pthread-多平台[972:17435] ---1---&lt;_UILayoutGuide: 0x7fd86b6457b0; frame = (0 568; 0 0); hidden = YES; layer = &lt;CALayer: 0x7fd86b644040&gt;&gt;
+     */
+</code></pre>
+
+<ul>
+<li>once一次性代码（单例模式设计）,有时候我们需要用到单例模式做一些操作例如：传值时，就会用到单例设计模式，设计单例模式的方法很多，其中最重要的是要做到线程安全，而GCD就提供了这么一个结构体来保证在创建单例过程中的线程安全</li>
+</ul>
+
+
+<pre><code class="objc">ETPerson.h
++ (instancetype)sharePerson;
+ETPerson.m
+@implementation ETPerson
+static ETPerson *_person;
+
++ (instancetype)sharePerson{
+    static dispatch_once_t onceDispatch;
+    dispatch_once(&amp;onceDispatch, ^{
+        _person = [[ETPerson alloc] init];
+    });
+    return _person;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone{
+    static dispatch_once_t onceDispatch;
+    dispatch_once(&amp;onceDispatch, ^{
+        _person = [super allocWithZone:zone];
+    });
+    return _person;
+}
+
+- (id)copyWithZone:(NSZone *)zone{
+    return _person;
+}
+@end
+调用
+//    onece(单例)
+    NSLog(@"%@----%@------%@-------%@------%@-----%@",[[ETPerson alloc] init],[[ETPerson alloc] init],[ETPerson copy],[ETPerson copy],[ETPerson sharePerson],[ETPerson sharePerson]);
+    /*运行结果
+     2015-07-08 23:26:57.292 Pthread-多平台[1350:37528] &lt;ETPerson: 0x7fc4bb4041c0&gt;----&lt;ETPerson: 0x7fc4bb4041c0&gt;------ETPerson-------ETPerson------&lt;ETPerson: 0x7fc4bb4041c0&gt;-----&lt;ETPerson: 0x7fc4bb4041c0&gt;
+     */
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>
