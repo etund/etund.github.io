@@ -101,4 +101,6 @@ theme: minima
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repository: https://github.com/etund/etund.github.io.git
+  branch: master
